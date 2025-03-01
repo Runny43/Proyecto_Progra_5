@@ -2,7 +2,7 @@
 using Google.Cloud.Firestore;
 using Proyecto.Firebase;
 
-namespace MyWebApp.Models
+namespace Proyecto.Models
 {
     public class Condominium
     {
@@ -23,7 +23,7 @@ namespace MyWebApp.Models
         {
             List<Condominium> condominiumList = new List<Condominium>();
 
-            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominiums");
+            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominium");
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
             foreach (var item in querySnapshot)
@@ -48,7 +48,7 @@ namespace MyWebApp.Models
             {
                 FirestoreDb db = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId);
 
-                CollectionReference coll = db.Collection("Condominiums");
+                CollectionReference coll = db.Collection("Condominium");
 
                 Dictionary<string, object> newCondo = new Dictionary<string, object>
                 {

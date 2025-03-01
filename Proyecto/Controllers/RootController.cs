@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Proyecto.Models;
 using Newtonsoft.Json;
-using MyWebApp.Models;
+//using MyWebApp.Models;
 
 namespace Proyecto.Controllers
 {
@@ -70,6 +70,28 @@ namespace Proyecto.Controllers
             if (user != null)
             {
                 return View();
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult CreateCondominium(string txtName, string txtAddress, int txtCount, string txtPhoto)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                CondominiumHelper condominiumHelper = new CondominiumHelper();
+
+                bool result = condominiumHelper.saveCondominium(new Condominium
+                {
+                    Name = txtName,
+                    Address = txtAddress,
+                    Count = txtCount,
+                    Photo = txtPhoto
+                }).Result;
+
+                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index", "Error");
