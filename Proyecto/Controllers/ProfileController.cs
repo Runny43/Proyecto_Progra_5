@@ -9,14 +9,43 @@ namespace Proyecto.Controllers
 {
     public class ProfileController : Controller
     {
+
+        public UserModel GetSessionInfo()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("userSession")))
+                {
+                    UserModel? user = JsonConvert.DeserializeObject<UserModel>(HttpContext.Session.GetString("userSession"));
+
+                    if (user.Type.Equals("root"))
+                    {
+                        return user;
+                    }
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         // GET: ProfileController
         public ActionResult Index()
         {
-            List<Condominium> condoList = CondominiumHelper.getCondominiums().Result;
+            UserModel? user = GetSessionInfo();
 
-            ViewBag.CondoList = condoList;
+            if (user != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+                ViewBag.OwnerList = UserHelper.getOwners().Result;
 
-            return View();
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
         }
 
         public ActionResult SetCount(int count)
@@ -34,23 +63,79 @@ namespace Proyecto.Controllers
 
         public ActionResult CreateOwner(string txtEmail, string txtName, string selCondo, int selCondoNumber)
         {
-            try
-            {
-                UserHelper userHelper = new UserHelper();
-                userHelper.postUserWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
+            UserModel? user = GetSessionInfo();
 
-                return RedirectToAction("Index", "Profile");
-            }
-            catch
+            if (user != null)
             {
-                return RedirectToAction("Index", "Error");
+                try
+                {
+                    UserHelper.postUserWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
+
+                    return RedirectToAction("Index", "Profile");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
             }
+
+            return RedirectToAction("Index", "Error");
+            //try
+            //{
+            //    UserHelper userHelper = new UserHelper();
+            //    userHelper.postUserWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
+
+            //    return RedirectToAction("Index", "Profile");
+            //}
+            //catch
+            //{
+            //    return RedirectToAction("Index", "Error");
+            //}
         }
+
+
+        public ActionResult EditOwner(string txtUuid, string txtEmail, string txtName, string selCondo, int selCondoNumber)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                try
+                {
+                    UserHelper.editOwner(txtUuid, txtEmail, txtName, selCondo, selCondoNumber);
+
+                    return RedirectToAction("Index", "Profile");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+      
 
         // GET: ProfileController/Create
         public ActionResult Create()
         {
             return View();
+        }
+
+        public ActionResult Edit(string id)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+                ViewBag.Owner = UserHelper.getUserInfo(id).Result;
+
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
         }
 
         // POST: ProfileController/Create
@@ -68,11 +153,7 @@ namespace Proyecto.Controllers
             }
         }
 
-        // GET: ProfileController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+       
 
         // POST: ProfileController/Edit/5
         [HttpPost]

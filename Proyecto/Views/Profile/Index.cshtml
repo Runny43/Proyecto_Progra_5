@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿@{
 	ViewData["Title"] = "Create Profile";
 }
 
@@ -7,12 +7,53 @@
 	<hr />
 	<nav>
 		<div class="nav nav-tabs" id="nav-tab" role="tablist">
-			<button class="nav-link active" id="nav-owner-tab" data-bs-toggle="tab" data-bs-target="#nav-owner" type="button" role="tab" aria-controls="nav-owner" aria-selected="true">Owners</button>
-			<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+			<button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Owners</button>
+			<button class="nav-link" id="nav-owner-tab" data-bs-toggle="tab" data-bs-target="#nav-owner" type="button" role="tab" aria-controls="nav-owner" aria-selected="true">Create owner</button>
 		</div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent">
-		<div class="tab-pane fade show active" id="nav-owner" role="tabpanel" aria-labelledby="nav-owner-tab" tabindex="0">
+		<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+			<div class="accordion accordion-flush" id="accordionFlushExample">
+				@foreach (var owner in @ViewBag.OwnerList)
+				{
+					<div class="accordion-item border rounded shadow-sm mb-3">
+						<h2 class="accordion-header" id="heading-@owner.uuid">
+							<button class="accordion-button collapsed bg-light text-dark fw-semibold"
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapse-@owner.uuid"
+									aria-expanded="false"
+									aria-controls="collapse-@owner.uuid">
+								<i class="bi bi-person-circle me-2"></i> @owner.Name
+							</button>
+						</h2>
+						<div id="collapse-@owner.uuid"
+							 class="accordion-collapse collapse"
+							 aria-labelledby="heading-@owner.uuid"
+							 data-bs-parent="#accordionFlushExample">
+
+							<div class="accordion-body">
+								<ul class="list-unstyled mb-0">
+									<li><strong>Email:</strong> @owner.Email</li>
+									<li><strong>Type:</strong> @owner.Type</li>
+									@if (@owner.Properties != null && @owner.Properties.Count > 0)
+									{
+										<li><strong>Property Name:</strong> @owner.Properties[0].CondoName</li>
+										<li><strong>Number:</strong> @owner.Properties[0].CondoNumber</li>
+									}
+								</ul>
+								@if (@owner.Type != "root")
+								{
+									<hr>
+									<a href="/Profile/Edit/@owner.Email" class="btn btn-info">Edit</a>
+								}
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+		<div class="tab-pane fade" id="nav-owner" role="tabpanel" aria-labelledby="nav-owner-tab" tabindex="0">
 			<div class="row justify-content-center">
 				<div class="col-md-4">
 					<div class="card shadow-lg p-4">
@@ -66,6 +107,5 @@
 				</div>
 			</div>
 		</div>
-		<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">Hola</div>
 	</div>
 </div>

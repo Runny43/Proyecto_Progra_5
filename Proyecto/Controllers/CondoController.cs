@@ -91,10 +91,7 @@ namespace Proyecto.Controllers
         }
 
         // GET: CondoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        
 
         // POST: CondoController/Create
         [HttpPost]

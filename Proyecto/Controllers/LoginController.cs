@@ -25,7 +25,7 @@ namespace MyWebApp.Controllers
                 //userHelper.postUserWithEmailAndPassword("jjtrejos@mycompany.com", "Admin$1234", "Juan Jose Trejos", "owner");
 
                 UserCredential userCredential = await FirebaseAuthHelper.setFirebaseAuthClient().SignInWithEmailAndPasswordAsync(email, password);
-                UserModel user = await userHelper.getUserInfo(email);
+                UserModel user = await UserHelper.getUserInfo(email);
 
                 HttpContext.Session.SetString("userSession", JsonConvert.SerializeObject(user));
 

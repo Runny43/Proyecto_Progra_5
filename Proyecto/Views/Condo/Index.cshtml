@@ -6,7 +6,7 @@
 <div class="container mt-4">
 	<h2>Condominium List - Welcome @ViewBag.User.Name</h2>
 	<a class="btn btn-primary" asp-area="" asp-controller="Root" asp-action="Main">Back</a>
-	<a class="btn btn-primary" asp-area="" asp-controller="Root" asp-action="Create">Add Condominium</a>
+	<a class="btn btn-primary" asp-area="" asp-controller="Condo" asp-action="Create">Add Condominium</a>
 	<hr />
 	<div class="row justify-content-center">
 		@foreach (var condominium in ViewBag.Condominium)
