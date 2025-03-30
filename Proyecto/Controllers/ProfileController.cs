@@ -1,64 +1,59 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto.Models;
+using Proyecto.Mic;
 using Newtonsoft.Json;
-
+using System.Text;
 
 namespace Proyecto.Controllers
 {
-    public class RootController : Controller
+    public class ProfileController : Controller
     {
-
-        public UserModel GetSessionInfo()
+        // GET: ProfileController
+        public ActionResult Index()
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("userSession")))
-                {
-                    UserModel? user = JsonConvert.DeserializeObject<UserModel>(HttpContext.Session.GetString("userSession"));
+            List<Condominium> condoList = CondominiumHelper.getCondominiums().Result;
 
-                    if (user.Type.Equals("root"))
-                    {
-                        return user;
-                    }
-                }
+            ViewBag.CondoList = condoList;
 
-                return null;
-            }
-            catch
-            {
-                return null;
-            }
+            return View();
         }
 
-        public ActionResult Main()
+        public ActionResult SetCount(int count)
         {
-            UserModel? user = GetSessionInfo();
+            ViewBag.Count = count;
 
-            if (user != null)
-            {
-                ViewBag.User = user;
-                return View();
-            }
-
-            return RedirectToAction("Index", "Error");
+            return View("Index");
         }
 
-        // GET: RootController
-        
-
-        
-
-        // GET: RootController/Details/5
+        // GET: ProfileController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: RootController/Create
-        
+        public ActionResult CreateOwner(string txtEmail, string txtName, string selCondo, int selCondoNumber)
+        {
+            try
+            {
+                UserHelper userHelper = new UserHelper();
+                userHelper.postUserWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
 
-        // POST: RootController/Create
+                return RedirectToAction("Index", "Profile");
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Error");
+            }
+        }
+
+        // GET: ProfileController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: ProfileController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -73,13 +68,13 @@ namespace Proyecto.Controllers
             }
         }
 
-        // GET: RootController/Edit/5
+        // GET: ProfileController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: RootController/Edit/5
+        // POST: ProfileController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -94,13 +89,13 @@ namespace Proyecto.Controllers
             }
         }
 
-        // GET: RootController/Delete/5
+        // GET: ProfileController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: RootController/Delete/5
+        // POST: ProfileController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

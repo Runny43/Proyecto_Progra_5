@@ -19,7 +19,7 @@ namespace Proyecto.Models
 
     public class CondominiumHelper
     {
-        public async Task<List<Condominium>> getCondominiums()
+        public static async Task<List<Condominium>> getCondominiums()
         {
             List<Condominium> condominiumList = new List<Condominium>();
 

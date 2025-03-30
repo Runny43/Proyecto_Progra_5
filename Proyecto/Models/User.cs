@@ -1,7 +1,7 @@
-﻿
-using Firebase.Auth;
+﻿using Firebase.Auth;
 using Google.Cloud.Firestore;
 using Proyecto.Firebase;
+using Proyecto.Mic;
 namespace Proyecto.Models
 {
     public class UserModel
@@ -33,9 +33,18 @@ namespace Proyecto.Models
             return user;
         }
 
-        public async void postUserWithEmailAndPassword(string email, string password, string displayName, string type)
+        public async void postUserWithEmailAndPassword(string email, string password, string displayName, string type, string selCondo, int selCondoNumber)
         {
             UserCredential userCredential = await FirebaseAuthHelper.setFirebaseAuthClient().CreateUserWithEmailAndPasswordAsync(email, password, displayName);
+
+            List<Dictionary<string, object>> objectProperties = new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "condo", selCondo },
+                        { "number", selCondoNumber }
+                    }
+                };
 
             DocumentReference docRef = await FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").AddAsync(
                     new Dictionary<string, object>
@@ -43,7 +52,10 @@ namespace Proyecto.Models
                             {"email", email },
                             {"name", displayName },
                             {"type", type},
+                            {"properties", objectProperties }
                         });
+
+            AppHelper.EmailHelper.SendEmail(email, displayName, password, selCondo, selCondoNumber);
         }
 
     }

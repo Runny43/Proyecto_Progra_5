@@ -1,0 +1,71 @@
+﻿﻿@{
+	ViewData["Title"] = "Create Profile";
+}
+
+<div class="container mt-4">
+	<a class="btn btn-primary" asp-area="" asp-controller="Condo" asp-action="Index">Back</a>
+	<hr />
+	<nav>
+		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			<button class="nav-link active" id="nav-owner-tab" data-bs-toggle="tab" data-bs-target="#nav-owner" type="button" role="tab" aria-controls="nav-owner" aria-selected="true">Owners</button>
+			<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+		<div class="tab-pane fade show active" id="nav-owner" role="tabpanel" aria-labelledby="nav-owner-tab" tabindex="0">
+			<div class="row justify-content-center">
+				<div class="col-md-4">
+					<div class="card shadow-lg p-4">
+						<form method="post" asp-controller="Profile" asp-action="CreateOwner">
+							<div class="mb-3">
+								<label for="txtEmail" class="form-label">Email</label>
+								<input type="email" id="txtEmail" name="txtEmail" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtName" class="form-label">Name & Last Name</label>
+								<input type="text" id="txtName" name="txtName" class="form-control" required />
+							</div>
+							<hr />
+							<div class="mb-3">
+								<select id="selCondo" name="selCondo" class="form-select" aria-label="Select the condominium">
+									<option selected>Select the condominium</option>
+
+									@foreach (var condo in @ViewBag.CondoList)
+									{
+										<option value="@condo.Name" data-count="@condo.Count">@condo.Name</option>
+									}
+								</select>
+							</div>
+							<div class="mb-3">
+								<select id="selCondoNumber" name="selCondoNumber" class="form-select" aria-label="Select the condo number">
+									<option selected>Select the condo number</option>
+
+								</select>
+							</div>
+							<script type="text/javascript">
+								document.getElementById("selCondo").addEventListener("change", function () {
+									var selectedOption = this.options[this.selectedIndex];
+									var maxCount = selectedOption.getAttribute("data-count");
+									var selCondoNumber = document.getElementById("selCondoNumber");
+									selCondoNumber.innerHTML = '<option selected>Select the condo number</option>';
+
+									if (maxCount) {
+										for (var i = 1; i <= maxCount; i++) {
+											var option = document.createElement("option");
+											option.value = i;
+											option.textContent = i;
+											selCondoNumber.appendChild(option);
+										}
+									}
+								});
+							</script>
+							<hr />
+							<button type="submit" class="btn btn-primary w-100">Register</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">Hola</div>
+	</div>
+</div>
