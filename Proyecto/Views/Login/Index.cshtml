@@ -3,8 +3,14 @@
 }
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            @TempData["Error"]
+        </div>
+    }
     <div class="offcanvas-header">
-        <h5 id="offcanvasRightLabel">Profile</h5>
+        <h5 class="fw-bold" id="offcanvasRightLabel" style="font-family: 'Lora', serif;">Profile</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -26,16 +32,14 @@
                     <hr />
                     <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Sign Up</a>
                 </form>
-                
             </div>
-            
         </div>
     </div>
 </div>
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasLeftLabel">
     <div class="offcanvas-header">
-        <h5 id="offcanvasLeftLabel">Sign Up</h5>
+        <h5 class="fw-bold" id="offcanvasLeftLabel" style="font-family: 'Georgia', serif;">Sign Up</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -68,4 +72,88 @@
         </div>
     </div>
 </div>
-        </div>
+<style>
+    body {
+        background-image: url('https://wallpapercave.com/wp/wp2416069.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    :root {
+        --primary-color: #c8b2f7;
+        --secondary-color: #edf1fa;
+        --text-color: #333;
+        --border-radius: 0.5rem;
+        --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+ 
+    .offcanvas {
+        background-color: var(--secondary-color);
+    }
+    
+    .card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        padding: 1rem;
+        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #8067b8; 
+            transform: translateY(-1px);
+        }
+  
+    .form-control {
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+
+    hr {
+        margin: 1.5rem 0;
+        border-top: 1px solid #eee;
+    }
+
+    #divLogin a.btn {
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .offcanvas-start {
+        width: 350px; 
+    }
+
+    .form-floating > .form-control:focus ~ label {
+        color: var(--primary-color);
+    }
+
+    .card-header {
+        background: linear-gradient(to right, #c8b2f7, #9d7de3);
+    }
+
+    .offcanvas {
+        transition: transform 0.3s ease-in-out;
+    }
+</style>

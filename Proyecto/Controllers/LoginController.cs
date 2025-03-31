@@ -39,11 +39,13 @@ namespace MyWebApp.Controllers
                     return RedirectToAction("Main", "Owner");
                 }
 
-                return RedirectToAction("Index", "Error");
+                TempData["Error"] = "Error.";
+                return RedirectToAction("Index");
             }
             catch
             {
-                return RedirectToAction("Index", "Error");
+                TempData["Error"] = "Error.";
+                return RedirectToAction("Index");
             }
         }
 

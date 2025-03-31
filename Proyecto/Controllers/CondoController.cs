@@ -46,8 +46,8 @@ namespace Proyecto.Controllers
 
                 return View();
             }
-
-            return RedirectToAction("Index", "Error");
+            TempData["Error"] = "Error.";
+            return RedirectToAction("Index");
         }
 
         public ActionResult Create()

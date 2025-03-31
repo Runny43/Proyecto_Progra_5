@@ -39,8 +39,8 @@ namespace Proyecto.Controllers
                 ViewBag.User = user;
                 return View();
             }
-
-            return RedirectToAction("Index", "Error");
+            TempData["Error"] = "Error.";
+            return RedirectToAction("Index");
         }
 
         public ActionResult Main()
@@ -52,8 +52,8 @@ namespace Proyecto.Controllers
                 ViewBag.User = user;
                 return View();
             }
-
-            return RedirectToAction("Index", "Error");
+            TempData["Error"] = "Error.";
+            return RedirectToAction("Index");
         }
 
 

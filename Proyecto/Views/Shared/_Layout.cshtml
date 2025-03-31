@@ -7,8 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Proyecto.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 </head>
 <body>
+    @{
+        //Obtiene el nombre del controlador y la acción actual
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -19,21 +25,34 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Home</a>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark @(currentController == "Login" && currentAction == "Index" ? "active" : "")"
+                               asp-controller="Login" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="LogOut">Logout</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#">Login</a>
-                        </li>
+                        <!--Se activa al estar en vista principal-->
+                        @if ((ViewContext.RouteData.Values["controller"]?.ToString() == "Login" &&
+                            ViewContext.RouteData.Values["action"]?.ToString() == "Index"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentAction == "Login" && currentController == "Login" ? "active" : "")"
+                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">Login</a>
+                            </li>
+                        }
+                        <!--Se activa en cualquier cista menos en principal-->
+                        @if (!(ViewContext.RouteData.Values["controller"]?.ToString() == "Login" &&
+                        ViewContext.RouteData.Values["action"]?.ToString() == "Index"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentAction == "LogOut" ? "active" : "")"
+                                   asp-controller="Login" asp-action="LogOut">Logout</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="LogOut"></a>
+    <div class="container" asp-controller="Login" asp-action="LogOut"></a>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -41,7 +60,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Proyecto - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Proyecto - Condominium</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
