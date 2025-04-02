@@ -26,7 +26,7 @@ namespace Proyecto.Mic
 
         public static class EmailHelper
         {
-            public static void SendEmail(string email, string displayName, string pwd, string selCondo, int selCondoNumber)
+            public static void SendEmail(string card, string email, string displayName, string pwd, string selCondo, int selCondoNumber)
             {
                 string sender = "firebaserrm@gmail.com";
                 string senderPwd = "oyuv xrwy qvjt wzbx";
@@ -42,6 +42,7 @@ namespace Proyecto.Mic
                     using (var sr = new StreamReader("wwwroot/templates/welcome.html"))
                     {
                         string body = sr.ReadToEnd().Replace("{usuario}", displayName);
+                        body = body.Replace("{id_Card}", card);
                         body = body.Replace("{email}", email);
                         body = body.Replace("{password}", pwd);
                         body = body.Replace("{condominio}", selCondo);

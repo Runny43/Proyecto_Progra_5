@@ -16,7 +16,7 @@
     <div class="offcanvas-body">
         <div class="card">
             <div class="card-header">
-                Login
+                Start
             </div>
             <div id="divLogin" runat="server" class="card-body">
                 <form method="post" asp-action="Login" asp-controller="Login">
@@ -30,48 +30,13 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                     <hr />
-                    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Sign Up</a>
+                    
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasLeftLabel">
-    <div class="offcanvas-header">
-        <h5 class="fw-bold" id="offcanvasLeftLabel" style="font-family: 'Georgia', serif;">Sign Up</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="card">
-            <div class="card-header">
-                Set up your credentials
-            </div>
-            <div id="div1" runat="server" class="card-body">
-                <div class="form-group">
-                    <div class="form-floating mb-3">
-                        <input runat="server" type="text" class="form-control" id="txtDisplayName" placeholder="John Doe" />
-                        <label for="txtDisplayName">Name</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input runat="server" type="email" class="form-control" id="txtSignUpEmail" placeholder="name@example.com" />
-                        <label for="txtSignUpEmail">Email address</label>
-                    </div>
-                    <div class="form-floating">
-                        <input runat="server" type="password" class="form-control" id="txtSignUpPwd" placeholder="Password" />
-                        <label for="txtSignUpPwd">Password</label>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <button runat="server" id="btnSignUp" class="btn btn-primary" onserverclick="btnSignUp_ServerClick">Sign Up</button>
-                    </div>
-                </div>
-            </div>
-            <div id="div2" runat="server" class="card-body" hidden="hidden">
-            </div>
-        </div>
-    </div>
-</div>
 <style>
     body {
         background-image: url('https://wallpapercave.com/wp/wp2416069.jpg');

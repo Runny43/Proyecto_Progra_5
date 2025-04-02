@@ -61,7 +61,7 @@ namespace Proyecto.Controllers
             return View();
         }
 
-        public ActionResult CreateOwner(string txtEmail, string txtName, string selCondo, int selCondoNumber)
+        public ActionResult CreateOwner(string txtCard, string txtEmail, string txtName, string txtPlate, string txtBrand, string txtModel, string txtColor, string selCondo, int selCondoNumber)
         {
             UserModel? user = GetSessionInfo();
 
@@ -69,7 +69,7 @@ namespace Proyecto.Controllers
             {
                 try
                 {
-                    UserHelper.postUserWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
+                    UserHelper.postUserWithEmailAndPassword(txtCard, txtPlate, txtBrand, txtModel, txtColor, txtEmail,  AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
 
                     return RedirectToAction("Index", "Profile");
                 }
@@ -94,7 +94,7 @@ namespace Proyecto.Controllers
         }
 
 
-        public ActionResult EditOwner(string txtUuid, string txtEmail, string txtName, string selCondo, int selCondoNumber)
+        public ActionResult EditOwner(string txtUuid, string txtCard, string txtEmail, string txtName, string txtPlate, string txtBrand, string txtModel, string txtColor, string selCondo, int selCondoNumber)
         {
             UserModel? user = GetSessionInfo();
 
@@ -102,7 +102,7 @@ namespace Proyecto.Controllers
             {
                 try
                 {
-                    UserHelper.editOwner(txtUuid, txtEmail, txtName, selCondo, selCondoNumber);
+                    UserHelper.editOwner(txtUuid, txtPlate, txtBrand, txtModel, txtColor, txtCard, txtEmail, txtName, selCondo, selCondoNumber);
 
                     return RedirectToAction("Index", "Profile");
                 }

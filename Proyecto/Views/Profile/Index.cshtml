@@ -59,12 +59,32 @@
 					<div class="card shadow-lg p-4">
 						<form method="post" asp-controller="Profile" asp-action="CreateOwner">
 							<div class="mb-3">
+								<label for="txtCard" class="form-label">Cedula de identidad:</label>
+								<input type="text" id="txtCard" name="txtCard" class="form-control" required />
+							</div>
+							<div class="mb-3">
 								<label for="txtEmail" class="form-label">Email</label>
 								<input type="email" id="txtEmail" name="txtEmail" class="form-control" required />
 							</div>
 							<div class="mb-3">
-								<label for="txtName" class="form-label">Name & Last Name</label>
+								<label for="txtName" class="form-label">Nombre y ultimo nombre</label>
 								<input type="text" id="txtName" name="txtName" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtPlate" class="form-label">Placa del automovil</label>
+								<input type="text" id="txtPlate" name="txtPlate" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtBrand" class="form-label">Marca</label>
+								<input type="text" id="txtBrand" name="txtBrand" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtModel" class="form-label">Modelo</label>
+								<input type="text" id="txtModel" name="txtModel" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtColor" class="form-label">Color del automovil</label>
+								<input type="text" id="txtColor" name="txtColor" class="form-control" required />
 							</div>
 							<hr />
 							<div class="mb-3">
