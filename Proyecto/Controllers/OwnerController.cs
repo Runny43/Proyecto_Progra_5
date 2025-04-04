@@ -43,6 +43,25 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Visits()
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                ViewBag.User = user;
+                List<VisitModel> visitList = VisitHelper.getVisit(user.Name).Result;
+
+                ViewBag.Visits = visitList;
+
+                HttpContext.Session.SetString("visitList", JsonConvert.SerializeObject(visitList));
+
+                return View();
+            }
+            TempData["Error"] = "Error.";
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Main()
         {
             UserModel? user = GetSessionInfo();

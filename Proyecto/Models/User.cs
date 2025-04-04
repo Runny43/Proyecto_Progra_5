@@ -55,7 +55,7 @@ namespace Proyecto.Models
             };
 
             user.Properties = new List<Propertie>();
-
+            user.Vehicles = new List<Vehicle>();
             try
             {
                 List<Object> propertieList = (List<Object>)data["properties"];
