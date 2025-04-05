@@ -39,6 +39,11 @@ namespace MyWebApp.Controllers
                     return RedirectToAction("Main", "Owner");
                 }
 
+                if (user.Type.Equals("security"))
+                {
+                    return RedirectToAction("Main", "Security");
+                }
+
                 TempData["Error"] = "Error.";
                 return RedirectToAction("Index");
             }

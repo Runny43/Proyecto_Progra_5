@@ -171,24 +171,11 @@ namespace Proyecto.Controllers
         }
 
         // GET: ProfileController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //public async Task<IActionResult> DeleteUser(string uuid)
+        //{
+        //    await DeleteUserAsync(uuid); // El uuid recibido desde el form
+        //    return RedirectToAction("Profile"); // Redirige a donde quieras después de la eliminación
+        //}
 
-        // POST: ProfileController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

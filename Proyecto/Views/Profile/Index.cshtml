@@ -42,10 +42,18 @@
 										<li><strong>Number:</strong> @owner.Properties[0].CondoNumber</li>
 									}
 								</ul>
-								@if (@owner.Type != "root")
+								@if (@owner.Type != "root" && @owner.Type != "security")
 								{
-									<hr>
+									@* <hr>
 									<a href="/Profile/Edit/@owner.Email" class="btn btn-info">Edit</a>
+									<button type="submit" class="btn btn-danger">Remove</button> *@
+
+									<a href="/Profile/Edit/@owner.Email" class="btn btn-info">Edit</a>
+
+									<form asp-action="DeleteUser" method="post" style="display:inline;">
+										<input type="hidden" name="uuid" value="@owner.uuid" />
+										<button type="submit" class="btn btn-danger">Remove</button>
+									</form>
 								}
 							</div>
 						</div>

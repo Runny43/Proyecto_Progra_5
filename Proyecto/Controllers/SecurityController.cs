@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Proyecto.Mic;
 using Proyecto.Models;
 
 namespace Proyecto.Controllers
 {
-    public class OwnerController : Controller
+    public class SecurityController : Controller
     {
         public UserModel GetSessionInfo()
         {
@@ -16,7 +15,7 @@ namespace Proyecto.Controllers
                 {
                     UserModel? user = JsonConvert.DeserializeObject<UserModel>(HttpContext.Session.GetString("userSession"));
 
-                    if (user.Type.Equals("owner"))
+                    if (user.Type.Equals("security"))
                     {
                         return user;
                     }
@@ -29,41 +28,6 @@ namespace Proyecto.Controllers
                 return null;
             }
         }
-
-        // GET: OwnerController
-        public ActionResult Index()
-        {
-            UserModel? user = GetSessionInfo();
-
-            if (user != null)
-            {
-                ViewBag.User = user;
-                return View();
-            }
-            TempData["Error"] = "Error.";
-            return RedirectToAction("Index");
-        }
-
-
-        public ActionResult Visits()
-        {
-            UserModel? user = GetSessionInfo();
-
-            if (user != null)
-            {
-                ViewBag.User = user;
-                List<VisitModel> visitList = VisitHelper.getVisit(user.Name).Result;
-
-                ViewBag.Visits = visitList;
-
-                HttpContext.Session.SetString("visitList", JsonConvert.SerializeObject(visitList));
-
-                return View();
-            }
-            TempData["Error"] = "Error.";
-            return RedirectToAction("Index");
-        }
-
         public ActionResult Main()
         {
             UserModel? user = GetSessionInfo();
@@ -78,19 +42,34 @@ namespace Proyecto.Controllers
         }
 
 
-        // GET: OwnerController/Details/5
+        // GET: SecurityController
+        public ActionResult Index()
+        {
+            UserModel? user = GetSessionInfo();
+            if (user != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+                ViewBag.SecurityList = UserHelper.getSecurity().Result;
+
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        // GET: SecurityController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: OwnerController/Create
+        // GET: SecurityController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: OwnerController/Create
+        // POST: SecurityController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -105,13 +84,13 @@ namespace Proyecto.Controllers
             }
         }
 
-        // GET: OwnerController/Edit/5
+        // GET: SecurityController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: OwnerController/Edit/5
+        // POST: SecurityController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -126,13 +105,13 @@ namespace Proyecto.Controllers
             }
         }
 
-        // GET: OwnerController/Delete/5
+        // GET: SecurityController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: OwnerController/Delete/5
+        // POST: SecurityController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

@@ -20,6 +20,8 @@ namespace Proyecto.Models
         public List<Propertie> Properties { get; set; }
 
         public List<Vehicle> Vehicles { get; set; }
+
+        public List<Assignment> Assignment { get; set; }
     }
 
     public class Propertie
@@ -28,6 +30,7 @@ namespace Proyecto.Models
         public int CondoNumber { get; set; }
     }
 
+
     public class Vehicle
     {
         public string Plate { get; set; }
@@ -35,9 +38,14 @@ namespace Proyecto.Models
         public string Model { get; set; }
         public string Color { get; set; }
     }
-        public class UserHelper
+
+    public class Assignment
     {
-        
+        public string CondoAssignment { get; set; }
+    }
+    public class UserHelper
+    {
+
         public static async Task<UserModel> getUserInfo(string email)
         {
             Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").WhereEqualTo("email", email);
@@ -48,7 +56,7 @@ namespace Proyecto.Models
             UserModel user = new UserModel
             {
                 uuid = querySnapshot.Documents[0].Id.ToString(),
-                id_Card= data["id_Card"].ToString(),
+                id_Card = data["id_Card"].ToString(),
                 Email = data["email"].ToString(),
                 Name = data["name"].ToString(),
                 Type = data["type"].ToString(),
@@ -56,6 +64,8 @@ namespace Proyecto.Models
 
             user.Properties = new List<Propertie>();
             user.Vehicles = new List<Vehicle>();
+            user.Assignment = new List<Assignment>();
+
             try
             {
                 List<Object> propertieList = (List<Object>)data["properties"];
@@ -84,6 +94,19 @@ namespace Proyecto.Models
                         Color = vehicleData["color"].ToString(),
                     });
                 }
+
+                List<Object> assignmentList = (List<Object>)data["Assignment"];
+
+                foreach (Object assignment in assignmentList)
+                {
+                    Dictionary<string, object> assignmentData = (Dictionary<string, object>)assignment;
+
+                    user.Assignment.Add(new Assignment
+                    {
+                        CondoAssignment = assignmentData["condoAssignment"].ToString(),
+
+                    });
+                }
             }
             catch
             {
@@ -106,7 +129,7 @@ namespace Proyecto.Models
                 UserModel owner = new UserModel
                 {
                     uuid = item.Id,
-                    id_Card= data["id_Card"].ToString(),
+                    id_Card = data["id_Card"].ToString(),
                     Name = data["name"].ToString(),
                     Email = data["email"].ToString(),
                     Type = data["type"].ToString(),
@@ -135,9 +158,9 @@ namespace Proyecto.Models
 
                     List<Object> vehicleList = (List<Object>)data["vehicles"];
 
-                    if(vehicleList.Count > 0)
+                    if (vehicleList.Count > 0)
                     {
-                        owner.Vehicles= new List<Vehicle>();
+                        owner.Vehicles = new List<Vehicle>();
                         foreach (Object vehicle in vehicleList)
                         {
                             Dictionary<string, object> vehicleData = (Dictionary<string, object>)vehicle;
@@ -267,5 +290,74 @@ namespace Proyecto.Models
             }
 
         }
+
+
+        //No me esta funcionando si alguno puede hacerlo se lo agradeceria, ya sea asi o de otra forma 
+
+        //public static async Task DeleteUserAsync(string uuid)
+        //{
+        //    try
+        //    {
+        //        // Usando FirestoreDb correctamente
+        //        var db = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId);
+        //        DocumentReference docRef = db.Collection("User").Document(uuid);
+        //        await docRef.DeleteAsync();  // Este es el método que debería funcionar
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Si ocurre algún error
+        //        Console.WriteLine($"Error al eliminar el usuario: {ex.Message}");
+        //    }
+        //}
+
+
+        public static async Task<List<UserModel>> getSecurity()
+        {
+            List<UserModel> securityList = new List<UserModel>();
+            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User");
+            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+
+            foreach (var item in querySnapshot)
+            {
+                Dictionary<string, object> data = item.ToDictionary();
+
+                UserModel security = new UserModel
+                {
+                    uuid = item.Id,
+                    Name = data["name"].ToString(),
+                    Email = data["email"].ToString(),
+                    Type = data["type"].ToString(),
+                };
+
+                try
+                {
+                    List<Object> assignmentList = (List<Object>)data["assignment"];
+                    if (assignmentList.Count > 0)
+                    {
+                        security.Assignment = new List<Assignment>();
+
+                        foreach (Object assignment in assignmentList)
+                        {
+                            Dictionary<string, object> assignmentData = (Dictionary<string, object>)assignment;
+
+                            security.Assignment.Add(new Assignment
+                            {
+                                CondoAssignment = assignmentData["condoAssignment"].ToString()
+                            });
+
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+                securityList.Add(security);
+
+            }
+            return securityList;
+
+        }
+
     }
 }

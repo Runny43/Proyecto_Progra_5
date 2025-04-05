@@ -1,6 +1,8 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using System.Text;
+using QRCoder;
+using System.Drawing;
 
 
 namespace Proyecto.Mic
@@ -24,31 +26,48 @@ namespace Proyecto.Mic
             return res.ToString();
         }
 
-        public static class EmailHelper
+        public static string CreatePasswordQR()
         {
-            public static void SendEmail(string card, string email, string displayName, string pwd, string selCondo, int selCondoNumber)
+            int len = 3;
+            string valid = "1234567890";
+
+            Random rnd = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
+
+            StringBuilder res = new StringBuilder();
+
+            while (0 <= len--)
             {
-                string sender = "firebaserrm@gmail.com";
-                string senderPwd = "oyuv xrwy qvjt wzbx";
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
 
-                //string sender = "";
-                //string senderPwd = "";
+            return res.ToString();
+        }
+    }
+    public static class EmailHelper
+    {
+        public static void SendEmail(string card, string email, string displayName, string pwd, string selCondo, int selCondoNumber)
+        {
+            string sender = "firebaserrm@gmail.com";
+            string senderPwd = "oyuv xrwy qvjt wzbx";
 
-                using (MailMessage mm = new MailMessage(sender, email))
+            //string sender = "";
+            //string senderPwd = "";
+
+            using (MailMessage mm = new MailMessage(sender, email))
+            {
+                mm.Subject = "Bienvenido al Sistema Automatico de Condominios";
+                mm.IsBodyHtml = true;
+
+                using (var sr = new StreamReader("wwwroot/templates/welcome.html"))
                 {
-                    mm.Subject = "Bienvenido al Sistema Automatico de Condominios";
-                    mm.IsBodyHtml = true;
-
-                    using (var sr = new StreamReader("wwwroot/templates/welcome.html"))
-                    {
-                        string body = sr.ReadToEnd().Replace("{usuario}", displayName);
-                        body = body.Replace("{id_Card}", card);
-                        body = body.Replace("{email}", email);
-                        body = body.Replace("{password}", pwd);
-                        body = body.Replace("{condominio}", selCondo);
-                        body = body.Replace("{numero_casa}", selCondoNumber.ToString());
+                    string body = sr.ReadToEnd().Replace("{usuario}", displayName);
+                    body = body.Replace("{id_Card}", card);
+                    body = body.Replace("{email}", email);
+                    body = body.Replace("{password}", pwd);
+                    body = body.Replace("{condominio}", selCondo);
+                    body = body.Replace("{numero_casa}", selCondoNumber.ToString());
                         mm.Body = body;
-                    }
+                }
 
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = "smtp.gmail.com";
@@ -58,8 +77,32 @@ namespace Proyecto.Mic
                     smtp.Credentials = NetworkCred;
                     smtp.Port = 587;
                     smtp.Send(mm);
-                }
             }
         }
     }
+
+    public static class QRGenerator
+    {
+        public static string GenerateQRCode()
+        {
+            string content = AppHelper.CreatePasswordQR();
+            string path = "wwwroot/qr/" + content + ".png";
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData data = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(data);
+            Bitmap bit = qrCode.GetGraphic(20);
+            bit.Save(path);
+
+            return path.Replace("wwwroot", string.Empty);
+        }
+
+
+
+
+
+    }
+
+
+    
 }
