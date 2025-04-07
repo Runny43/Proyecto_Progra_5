@@ -65,51 +65,64 @@ namespace Proyecto.Models
             user.Properties = new List<Propertie>();
             user.Vehicles = new List<Vehicle>();
             user.Assignment = new List<Assignment>();
-
-            try
+            if (user.Type == "security")
             {
-                List<Object> propertieList = (List<Object>)data["properties"];
-
-                foreach (Object propertie in propertieList)
+                try
                 {
-                    Dictionary<string, object> propertieData = (Dictionary<string, object>)propertie;
+                    List<Object> assignmentList = (List<Object>)data["assignment"];
 
-                    user.Properties.Add(new Propertie
+                    foreach (Object assignment in assignmentList)
                     {
-                        CondoName = propertieData["condo"].ToString(),
-                        CondoNumber = Convert.ToInt16(propertieData["number"])
-                    });
+                        Dictionary<string, object> assignmentData = (Dictionary<string, object>)assignment;
+
+                        user.Assignment.Add(new Assignment
+                        {
+                            CondoAssignment = assignmentData["condoAssignment"].ToString(),
+
+                        });
+                    }
                 }
-                List<Object> vehicleList = (List<Object>)data["vehicles"];
-
-                foreach (Object vehicle in vehicleList)
+                catch
                 {
-                    Dictionary<string, object> vehicleData = (Dictionary<string, object>)vehicle;
-
-                    user.Vehicles.Add(new Vehicle
-                    {
-                        Plate = vehicleData["plate"].ToString(),
-                        Brand = vehicleData["brand"].ToString(),
-                        Model = vehicleData["model"].ToString(),
-                        Color = vehicleData["color"].ToString(),
-                    });
-                }
-
-                List<Object> assignmentList = (List<Object>)data["Assignment"];
-
-                foreach (Object assignment in assignmentList)
-                {
-                    Dictionary<string, object> assignmentData = (Dictionary<string, object>)assignment;
-
-                    user.Assignment.Add(new Assignment
-                    {
-                        CondoAssignment = assignmentData["condoAssignment"].ToString(),
-
-                    });
                 }
             }
-            catch
+            else
             {
+                try
+                {
+                    List<Object> propertieList = (List<Object>)data["properties"];
+
+                    foreach (Object propertie in propertieList)
+                    {
+                        Dictionary<string, object> propertieData = (Dictionary<string, object>)propertie;
+
+                        user.Properties.Add(new Propertie
+                        {
+                            CondoName = propertieData["condo"].ToString(),
+                            CondoNumber = Convert.ToInt16(propertieData["number"])
+                        });
+                    }
+                    List<Object> vehicleList = (List<Object>)data["vehicles"];
+
+                    foreach (Object vehicle in vehicleList)
+                    {
+                        Dictionary<string, object> vehicleData = (Dictionary<string, object>)vehicle;
+
+                        user.Vehicles.Add(new Vehicle
+                        {
+                            Plate = vehicleData["plate"].ToString(),
+                            Brand = vehicleData["brand"].ToString(),
+                            Model = vehicleData["model"].ToString(),
+                            Color = vehicleData["color"].ToString(),
+                        });
+                    }
+
+
+                }
+                catch
+                {
+                }
+
             }
 
             return user;
