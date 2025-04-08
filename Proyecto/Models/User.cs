@@ -4,6 +4,7 @@ using Google.Cloud.Firestore;
 using Proyecto.Firebase;
 using Proyecto.Mic;
 using System;
+using System.Drawing.Drawing2D;
 using static Proyecto.Mic.AppHelper;
 namespace Proyecto.Models
 {
@@ -251,15 +252,16 @@ namespace Proyecto.Models
             DocumentReference docRef = await FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").AddAsync(
                     new Dictionary<string, object>
                         {
-                            {"id_Card", card},
                             {"email", email },
                             {"name", displayName },
+                            {"id_Card", card},
                             {"type", type},
                             {"properties", objectProperties },
                             {"vehicles", objectVehicles}
                         });
 
-            EmailHelper.SendEmail(card, email, displayName, password, selCondo, selCondoNumber);
+            //EmailHelper.SendEmail(email, displayName, password, card, selCondo, selCondoNumber, plate, brand, model, color);
+            EmailHelper.SendEmail(card, email, displayName, password, selCondo, selCondoNumber, plate, brand, model, color);
         }
 
         public static async void editOwner(string uuid, string plate, string brand, string model, string color, string card, string email, string displayName, string selCondo, int selCondoNumber)
@@ -370,6 +372,61 @@ namespace Proyecto.Models
             }
             return securityList;
 
+        }
+
+        public static async void postSecurityWithEmailAndPassword(string email, string password, string displayName, string card, string type, string selCondo)
+        {
+            UserCredential userCredential = await FirebaseAuthHelper.setFirebaseAuthClient().CreateUserWithEmailAndPasswordAsync(email, password, displayName);
+            List<Dictionary<string, object>> objectAssignment = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                        { "condoAssignment", selCondo }
+
+                }
+            };
+            DocumentReference docRef = await FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").AddAsync(
+                new Dictionary<string, object>
+                {
+                    {"email", email },
+                    {"name", displayName },
+                    {"id_Card",card },
+                    {"type", type},
+                    {"assignment", objectAssignment}
+                });
+
+            EmailHelper.SendSecurityEmail(email, displayName, password, card, selCondo);
+           
+        }
+
+        public static async void editSecurity(string uuid, string email, string displayName, string card, string selCondo)
+        {
+     
+            try
+            {
+                List<Dictionary<string, object>> objectAssignment = new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "condoAssignment", selCondo },
+                    }
+                };
+                
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").Document(uuid);
+                Dictionary<string, object> dataToUpdate = new Dictionary<string, object>
+                {
+                    {"name", displayName },
+                    {"id_Card",card },
+                    {"assignment", objectAssignment}
+                };
+
+                WriteResult result = await docRef.UpdateAsync(dataToUpdate);
+                Thread.Sleep(3000);
+            }
+            catch
+            {
+
+            }
         }
 
     }

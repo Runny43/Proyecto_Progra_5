@@ -14,7 +14,7 @@
 	<div class="tab-content" id="nav-tabContent">
 		<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
 			<div class="accordion accordion-flush" id="accordionFlushExample">
-				@foreach (var security in @ViewBag.SecurityList)
+				@foreach (var security in ((IEnumerable<dynamic>)ViewBag.SecurityList).Where(s => s.Type == "security"))
 				{
 					<div class="accordion-item border rounded shadow-sm mb-3">
 						<h2 class="accordion-header" id="heading-@security.uuid">
@@ -42,19 +42,17 @@
 										
 									}
 								</ul>
-								@if (@security.Type != "root" && @security.Type != "security")
-								{
 									@* <hr>
 									<a href="/Profile/Edit/@security.Email" class="btn btn-info">Edit</a>
 									<button type="submit" class="btn btn-danger">Remove</button> *@
 
-									<a href="/Profile/Edit/@security.Email" class="btn btn-info">Edit</a>
+									<a href="/Profile/EditSecurity/@security.Email" class="btn btn-info">Edit</a>
 
 									<form asp-action="DeleteUser" method="post" style="display:inline;">
 										<input type="hidden" name="uuid" value="@security.uuid" />
 										<button type="submit" class="btn btn-danger">Remove</button>
 									</form>
-								}
+								
 							</div>
 						</div>
 					</div>

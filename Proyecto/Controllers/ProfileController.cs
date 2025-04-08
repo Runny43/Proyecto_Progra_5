@@ -4,6 +4,9 @@ using Proyecto.Models;
 using Proyecto.Mic;
 using Newtonsoft.Json;
 using System.Text;
+using static QRCoder.PayloadGenerator;
+using System.Drawing.Drawing2D;
+using Firebase.Auth;
 
 namespace Proyecto.Controllers
 {
@@ -55,13 +58,26 @@ namespace Proyecto.Controllers
             return View("Index");
         }
 
-        // GET: ProfileController/Details/5
-        public ActionResult Details(int id)
+
+        public ActionResult IndexSecurity()
         {
-            return View();
+            UserModel? user = GetSessionInfo();
+            if (user != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+                ViewBag.SecurityList = UserHelper.getSecurity().Result;
+
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
         }
 
-        public ActionResult CreateOwner(string txtCard, string txtEmail, string txtName, string txtPlate, string txtBrand, string txtModel, string txtColor, string selCondo, int selCondoNumber)
+        
+
+
+        
+        public ActionResult CreateOwner(string txtEmail, string txtName, string txtCard, string txtPlate, string txtBrand, string txtModel, string txtColor, string selCondo, int selCondoNumber)
         {
             UserModel? user = GetSessionInfo();
 
@@ -70,6 +86,7 @@ namespace Proyecto.Controllers
                 try
                 {
                     UserHelper.postUserWithEmailAndPassword(txtCard, txtPlate, txtBrand, txtModel, txtColor, txtEmail,  AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
+                   
 
                     return RedirectToAction("Index", "Profile");
                 }
@@ -80,17 +97,8 @@ namespace Proyecto.Controllers
             }
 
             return RedirectToAction("Index", "Error");
-            //try
-            //{
-            //    UserHelper userHelper = new UserHelper();
-            //    userHelper.postUserWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, "owner", selCondo, selCondoNumber);
-
-            //    return RedirectToAction("Index", "Profile");
-            //}
-            //catch
-            //{
-            //    return RedirectToAction("Index", "Error");
-            //}
+            
+            
         }
 
 
@@ -115,14 +123,6 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index", "Error");
         }
 
-      
-
-        // GET: ProfileController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         public ActionResult Edit(string id)
         {
             UserModel? user = GetSessionInfo();
@@ -137,6 +137,77 @@ namespace Proyecto.Controllers
 
             return RedirectToAction("Index", "Error");
         }
+
+        public ActionResult CreateSecurity(string txtEmail, string txtName, string txtCard, string selCondo)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                try
+                {
+
+                    UserHelper.postSecurityWithEmailAndPassword(txtEmail, AppHelper.CreatePassword(), txtName, txtCard, "security", selCondo);
+
+
+                    return RedirectToAction("IndexSecurity", "Profile");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult EditSecurity(string id)
+        {
+
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+                ViewBag.Security = UserHelper.getUserInfo(id).Result;
+
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult EditSecurityAction(string txtUuid, string txtEmail, string displayName, string txtCard, string selCondo)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                try
+                {
+                    UserHelper.editSecurity(txtUuid, txtEmail, displayName, txtCard, selCondo);
+
+                    return RedirectToAction("EditSecurity", "Profile");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+
+
+
+        // GET: ProfileController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+
 
         // POST: ProfileController/Create
         [HttpPost]

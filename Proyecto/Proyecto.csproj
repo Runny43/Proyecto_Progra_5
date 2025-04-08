@@ -18,4 +18,11 @@
     <Folder Include="wwwroot\qr\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\templates\welcomeSecurity.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

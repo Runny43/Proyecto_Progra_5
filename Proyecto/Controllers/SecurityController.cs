@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Proyecto.Models;
+using Proyecto.Mic;
+using Newtonsoft.Json;
+using System.Text;
+
 
 namespace Proyecto.Controllers
 {
@@ -43,18 +46,13 @@ namespace Proyecto.Controllers
 
 
         // GET: SecurityController
-        public ActionResult Index()
+        
+
+        public ActionResult SetCount(int count)
         {
-            UserModel? user = GetSessionInfo();
-            if (user != null)
-            {
-                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
-                ViewBag.SecurityList = UserHelper.getSecurity().Result;
+            ViewBag.Count = count;
 
-                return View();
-            }
-
-            return RedirectToAction("Index", "Error");
+            return View("Index");
         }
 
         // GET: SecurityController/Details/5

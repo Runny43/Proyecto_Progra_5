@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using QRCoder;
 using System.Drawing;
+using System.Reflection;
 
 
 namespace Proyecto.Mic
@@ -45,7 +46,7 @@ namespace Proyecto.Mic
     }
     public static class EmailHelper
     {
-        public static void SendEmail(string card, string email, string displayName, string pwd, string selCondo, int selCondoNumber)
+        public static void SendEmail(string card, string email, string displayName, string pwd, string selCondo, int selCondoNumber, string plate, string brand, string model, string color)
         {
             string sender = "firebaserrm@gmail.com";
             string senderPwd = "oyuv xrwy qvjt wzbx";
@@ -61,12 +62,17 @@ namespace Proyecto.Mic
                 using (var sr = new StreamReader("wwwroot/templates/welcome.html"))
                 {
                     string body = sr.ReadToEnd().Replace("{usuario}", displayName);
-                    body = body.Replace("{id_Card}", card);
+                    body = body.Replace("{cedula}", card);
                     body = body.Replace("{email}", email);
                     body = body.Replace("{password}", pwd);
                     body = body.Replace("{condominio}", selCondo);
                     body = body.Replace("{numero_casa}", selCondoNumber.ToString());
-                        mm.Body = body;
+                    body = body.Replace("{placa}", plate);
+                    body = body.Replace("{marca}", brand);
+                    body = body.Replace("{modelo}", model);
+                    body = body.Replace("{color}", color);
+
+                    mm.Body = body;
                 }
 
                     SmtpClient smtp = new SmtpClient();
@@ -77,6 +83,41 @@ namespace Proyecto.Mic
                     smtp.Credentials = NetworkCred;
                     smtp.Port = 587;
                     smtp.Send(mm);
+            }
+        }
+
+
+        public static void SendSecurityEmail(string email, string displayName, string pwd, string card, string selCondo)
+        {
+            string sender = "firebaserrm@gmail.com";
+            string senderPwd = "oyuv xrwy qvjt wzbx";
+
+            //string sender = "";
+            //string senderPwd = "";
+
+            using (MailMessage mm = new MailMessage(sender, email))
+            {
+                mm.Subject = "Bienvenido al Sistema Automatico de Condominios";
+                mm.IsBodyHtml = true;
+
+                using (var sr = new StreamReader("wwwroot/templates/welcomeSecurity.html"))
+                {
+                    string body = sr.ReadToEnd().Replace("{usuario}", displayName);
+                    body = body.Replace("{email}", email);
+                    body = body.Replace("{password}", pwd);
+                    body = body.Replace("{cedula}", card);
+                    body = body.Replace("{condominio}", selCondo);
+                    mm.Body = body;
+                }
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.EnableSsl = true;
+                NetworkCredential NetworkCred = new NetworkCredential(sender, senderPwd);
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = NetworkCred;
+                smtp.Port = 587;
+                smtp.Send(mm);
             }
         }
     }

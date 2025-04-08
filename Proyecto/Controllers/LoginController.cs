@@ -22,7 +22,6 @@ namespace MyWebApp.Controllers
             {
                 UserHelper userHelper = new UserHelper();
 
-                //userHelper.postUserWithEmailAndPassword("jjtrejos@mycompany.com", "Admin$1234", "Juan Jose Trejos", "owner");
 
                 UserCredential userCredential = await FirebaseAuthHelper.setFirebaseAuthClient().SignInWithEmailAndPasswordAsync(email, password);
                 UserModel user = await UserHelper.getUserInfo(email);

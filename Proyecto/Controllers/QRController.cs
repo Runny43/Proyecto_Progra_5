@@ -21,6 +21,8 @@ namespace Proyecto.Controllers
             return View("Index");
         }
 
+
+
         // GET: QRController/Details/5
         public ActionResult Details(int id)
         {
