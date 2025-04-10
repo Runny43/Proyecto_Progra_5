@@ -5,8 +5,8 @@ namespace Proyecto.Firebase
 {
     public static class FirebaseAuthHelper
     {
-        public const string firebaseAppId = "proyecto-grupo1-f4be6";
-        public const string firebaseApiKey = "AIzaSyAXrKaucDXX_9sR8ucXpqrJ6E7nsJeEyYA";
+        public const string firebaseAppId = "";
+        public const string firebaseApiKey = "";
 
         public static FirebaseAuthClient setFirebaseAuthClient()
         {

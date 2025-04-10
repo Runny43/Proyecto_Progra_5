@@ -27,19 +27,19 @@ namespace Proyecto.Models
 
             Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Visits").WhereEqualTo("To", name);
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-            VisitModel visit = new VisitModel();
+            
 
             foreach (var item in querySnapshot)
             {
                 Dictionary<string, object> data = item.ToDictionary();
-
-                visitInfo.Add(new VisitModel
+                VisitModel visit = new VisitModel
                 {
-                    Id_Card= data["id_Card"].ToString(),
+                    uuid = item.Id,
+                    Id_Card = data["id_Card"].ToString(),
                     To = data["To"].ToString(),
-                    Name= data["name"].ToString(),
-                    Type= data["type"].ToString(),
-                });
+                    Name = data["name"].ToString(),
+                    Type = data["type"].ToString(),
+                };
 
                 
                 visit.Vehicles = new List<VisitorVehicle>();
