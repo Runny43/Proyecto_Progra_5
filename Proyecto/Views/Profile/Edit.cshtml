@@ -30,19 +30,19 @@
 							</div>
 							<div class="mb-3">
 								<label for="txtPlate" class="form-label">Placa del automovil</label>
-								<input type="text" id="txtPlate" name="txtPlate" class="form-control" value="@ViewBag.Owner.Plate" required />
+								<input type="text" id="txtPlate" name="txtPlate" class="form-control" value="@ViewBag.Owner.Vehicles[0].Plate" required />
 							</div>
 							<div class="mb-3">
 								<label for="txtBrand" class="form-label">Marca</label>
-								<input type="text" id="txtBrand" name="txtBrand" class="form-control" required />
+								<input type="text" id="txtBrand" name="txtBrand" class="form-control" value="@ViewBag.Owner.Vehicles[0].Brand" required />
 							</div>
 							<div class="mb-3">
 								<label for="txtModel" class="form-label">Modelo</label>
-								<input type="text" id="txtModel" name="txtModel" class="form-control" required />
+								<input type="text" id="txtModel" name="txtModel" class="form-control" value="@ViewBag.Owner.Vehicles[0].Model" required />
 							</div>
 							<div class="mb-3">
 								<label for="txtColor" class="form-label">Color del automovil</label>
-								<input type="text" id="txtColor" name="txtColor" class="form-control" required />
+								<input type="text" id="txtColor" name="txtColor" class="form-control" value="@ViewBag.Owner.Vehicles[0].Color" required />
 							</div>
 							<hr />
 							<div class="mb-3">
