@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Visits Page";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">Transaction List - Welcome @ViewBag.User.Name</h2>
+    <a class="btn btn-primary" asp-area="Main" asp-controller="Owner" asp-action="Main">Back</a>
+    <hr />
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>To</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var delivery in ViewBag.Delivery)
+            {
+                <tr>
+                    <td>@delivery.Name</td>
+                    <td>@delivery.To</td>
+                    <td>@delivery.Type</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    body {
+        background-image: url('https://s0.smartresize.com/wallpaper/751/96/HD-wallpaper-px-digital-art-japan-minimalism-simple-background-sun-trees-video-games-star-wars-fotografia-neon-ilustracion-de-arbol-fondos-de-pantalla-simples-minimalist-japanese-art.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    table {
+        margin-top: 30px;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse: collapse;
+        background-color: white;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+</style>

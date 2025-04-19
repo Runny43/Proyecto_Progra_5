@@ -63,7 +63,24 @@ namespace Proyecto.Controllers
             TempData["Error"] = "Error.";
             return RedirectToAction("Index");
         }
+        public ActionResult Deliverys()
+        {
+            UserModel? user = GetSessionInfo();
 
+            if (user != null)
+            {
+                ViewBag.User = user;
+                List<VisitModel> deliveryList = VisitHelper.getDelivery(user.Name).Result;
+
+                ViewBag.Delivery = deliveryList;
+
+                HttpContext.Session.SetString("deliveryList", JsonConvert.SerializeObject(deliveryList));
+
+                return View();
+            }
+            TempData["Error"] = "Error.";
+            return RedirectToAction("Index");
+        }
         public ActionResult Main()
         {
             UserModel? user = GetSessionInfo();

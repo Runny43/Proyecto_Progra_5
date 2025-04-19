@@ -74,6 +74,34 @@ namespace Proyecto.Models
 
             return visitInfo;
         }
+
+        public static async Task<List<VisitModel>> getDelivery(string name)
+        {
+            List<VisitModel> deliveryInfo = new List<VisitModel>();
+
+            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Deliverys").WhereEqualTo("To", name);
+            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+
+
+            foreach (var item in querySnapshot)
+            {
+                Dictionary<string, object> data = item.ToDictionary();
+                VisitModel visit = new VisitModel
+                {
+                    uuid = item.Id,
+                    To = data["To"].ToString(),
+                    Name = data["name"].ToString(),
+                    Type = data["type"].ToString(),
+                };
+                deliveryInfo.Add(visit);
+                
+            }
+
+
+
+
+            return deliveryInfo;
+        }
         public static async Task<List<VisitModel>> getAllVisits()
         {
             List<VisitModel> visitsList = new List<VisitModel>();
