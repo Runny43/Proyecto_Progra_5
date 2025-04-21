@@ -52,6 +52,14 @@ namespace Proyecto.Models
             Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").WhereEqualTo("email", email);
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
+
+            if (querySnapshot.Documents.Count == 0)
+            {
+                // No encontró ningún usuario con ese email
+                return null;
+            }
+
+
             Dictionary<string, object> data = querySnapshot.Documents[0].ToDictionary();
 
             UserModel user = new UserModel
@@ -202,31 +210,6 @@ namespace Proyecto.Models
         }
 
 
-        //public async void postUserWithEmailAndPassword(string email, string password, string displayName, string type, string selCondo, int selCondoNumber)
-        //{
-        //    UserCredential userCredential = await FirebaseAuthHelper.setFirebaseAuthClient().CreateUserWithEmailAndPasswordAsync(email, password, displayName);
-
-        //    List<Dictionary<string, object>> objectProperties = new List<Dictionary<string, object>>
-        //        {
-        //            new Dictionary<string, object>
-        //            {
-        //                { "condo", selCondo },
-        //                { "number", selCondoNumber }
-        //            }
-        //        };
-
-        //    DocumentReference docRef = await FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").AddAsync(
-        //            new Dictionary<string, object>
-        //                {
-        //                    {"email", email },
-        //                    {"name", displayName },
-        //                    {"type", type},
-        //                    {"properties", objectProperties }
-        //                });
-
-        //    AppHelper.EmailHelper.SendEmail(email, displayName, password, selCondo, selCondoNumber);
-        //}
-
         public static async void postUserWithEmailAndPassword(string card, string plate, string brand, string model, string color, string email, string password, string displayName, string type, string selCondo, int selCondoNumber)
         {
             UserCredential userCredential = await FirebaseAuthHelper.setFirebaseAuthClient().CreateUserWithEmailAndPasswordAsync(email, password, displayName);
@@ -305,25 +288,6 @@ namespace Proyecto.Models
             }
 
         }
-
-
-        //No me esta funcionando si alguno puede hacerlo se lo agradeceria, ya sea asi o de otra forma 
-
-        //public static async Task DeleteUserAsync(string uuid)
-        //{
-        //    try
-        //    {
-        //        // Usando FirestoreDb correctamente
-        //        var db = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId);
-        //        DocumentReference docRef = db.Collection("User").Document(uuid);
-        //        await docRef.DeleteAsync();  // Este es el método que debería funcionar
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Si ocurre algún error
-        //        Console.WriteLine($"Error al eliminar el usuario: {ex.Message}");
-        //    }
-        //}
 
 
         public static async Task<List<UserModel>> getSecurity()
@@ -428,6 +392,61 @@ namespace Proyecto.Models
 
             }
         }
+
+        public static async Task<bool> DeleteOwner(string uuid, string email)
+        {
+            try
+            {
+                // 1. Eliminar de Firestore
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId)
+                                                   .Collection("User")
+                                                   .Document(uuid);
+                await docRef.DeleteAsync();
+
+                //// 2. Eliminar de Authentication (Versión 4.1.0)
+                //var auth = FirebaseAuth.DefaultInstance;
+                //var userRecord = await auth.GetUserByEmailAsync(email);
+                //await auth.DeleteUserAsync(userRecord.Uid);
+
+                //// Eliminar de Authentication
+                //var authClient = FirebaseAuthHelper.setFirebaseAuthClient();
+                //var userRecord = await authClient.GetUserByEmailAsync(email);
+                //await authClient.DeleteUserAsync(userRecord.Uid);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar owner: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static async Task<bool> DeleteSecurity(string uuid, string email)
+        {
+            try
+            {
+                // Eliminar de Firestore
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").Document(uuid);
+                await docRef.DeleteAsync();
+
+                //// Eliminar de Authentication
+                //var authClient = FirebaseAuthHelper.setFirebaseAuthClient();
+                //var userRecord = await authClient.GetUserByEmailAsync(email);
+                //await authClient.DeleteUserAsync(userRecord.Uid);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Puedes loggear el error aquí si lo necesitas
+                Console.WriteLine($"Error al eliminar security: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
 
     }
 }
