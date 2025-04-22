@@ -48,10 +48,17 @@
 
 									<a href="/Profile/EditSecurity/@security.Email" class="btn btn-info">Edit</a>
 
-									<form asp-action="DeleteUser" method="post" style="display:inline;">
+									@* <form asp-action="DeleteUser" method="post" style="display:inline;">
 										<input type="hidden" name="uuid" value="@security.uuid" />
 										<button type="submit" class="btn btn-danger">Remove</button>
-									</form>
+									</form> *@
+								<form asp-action="DeleteSecurity" method="post" style="display:inline; class=" ms-2"">
+									<input type="hidden" name="uuid" value="@security.uuid" />
+									<button type="submit" class="btn btn-danger"
+											onclick="return confirm('¿Estás seguro de querer eliminar este security?')">
+										Remove Security
+									</button>
+								</form>
 								
 							</div>
 						</div>

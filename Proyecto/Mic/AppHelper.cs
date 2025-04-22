@@ -4,6 +4,7 @@ using System.Text;
 using QRCoder;
 using System.Drawing;
 using System.Reflection;
+using Google.Cloud.Firestore;
 
 
 namespace Proyecto.Mic
@@ -27,7 +28,7 @@ namespace Proyecto.Mic
             return res.ToString();
         }
 
-        public static string CreatePasswordQR()
+        public static string CreateEasyPassCode()
         {
             int len = 3;
             string valid = "1234567890";
@@ -122,15 +123,43 @@ namespace Proyecto.Mic
         }
     }
 
+
+    public static class FirebaseHelper
+    {
+        public static async Task GuardarEasyPass(string code)
+        {
+            FirestoreDb db = FirestoreDb.Create("proyecto-grupo1-47c47");
+
+            // Obtener la fecha actual y la fecha de expiración
+            var now = Timestamp.FromDateTime(DateTime.UtcNow);
+            var expires = Timestamp.FromDateTime(DateTime.UtcNow.AddHours(12));
+
+            // Crear el objeto EasyPass con los datos necesarios
+            var easyPass = new
+            {
+                Code = code,
+                CreationDate = now,
+                ExpirationDate = expires
+            };
+
+            // Referencia a la colección "EasyPasses" en Firestore
+            CollectionReference colRef = db.Collection("EasyPasses");
+
+            // Agregar el nuevo documento a la colección
+            await colRef.AddAsync(easyPass);
+        }
+    }
+
     public static class QRGenerator
     {
-        public static string GenerateQRCode()
+
+        public static string GenerateQRCode(string code)
         {
-            string content = AppHelper.CreatePasswordQR();
-            string path = "wwwroot/qr/" + content + ".png";
+            //string content = AppHelper.CreateEasyPassCode();
+            string path = "wwwroot/qr/" + code + ".png";
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData data = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+            QRCodeData data = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(data);
             Bitmap bit = qrCode.GetGraphic(20);
             bit.Save(path);
@@ -139,11 +168,7 @@ namespace Proyecto.Mic
         }
 
 
-
-
-
     }
 
 
-    
 }

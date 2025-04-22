@@ -1,18 +1,18 @@
-﻿@{
-	ViewData["Title"] = "QR Page";
+﻿
+@{
+	ViewData["Title"] = "Generar Código EasyPass";
 }
 
+<h2>@ViewData["Title"]</h2>
 
-<div class="container mt-4">	
-	<form asp-action="Generate" asp-controller="QR">
-		<button type="submit" class="btn btn-primary">Generate QR</button>
-		<a class="btn btn-primary" asp-area="" asp-controller="Login" asp-action="Index">Back</a>
-	</form>	
-	<hr />
-	<div class="row justify-content-center">
-		@if (@ViewBag.QRCode != null)
-		{
-			<img src="@ViewBag.QRCode" style="width:42rem;height:38rem">
-		}		
-	</div>
-</div>
+<!-- Botón para generar el código -->
+<form method="post" action="@Url.Action("Generate", "QR")">
+	<button type="submit" class="btn btn-primary">Generar Código</button>
+</form>
+
+<!-- Mostrar el QR si está disponible -->
+@if (ViewBag.QRCode != null)
+{
+	<h3>Código EasyPass Generado:</h3>
+	<img src="@Url.Content(ViewBag.QRCode)" alt="QR Code" />
+}

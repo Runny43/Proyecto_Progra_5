@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto.Mic;
+using Proyecto.Models;
 
 namespace Proyecto.Controllers
 {
@@ -12,14 +13,51 @@ namespace Proyecto.Controllers
             return View();
         }
 
-        public ActionResult Generate()
-        {
-            string path = QRGenerator.GenerateQRCode();
+        public async Task<ActionResult> Generate()
 
-            ViewBag.QRCode = path;
+        {
+            /// Generamos el código EasyPass
+            string code = AppHelper.CreateEasyPassCode();
+
+            // Guardamos el código en Firestore
+            await FirebaseHelper.GuardarEasyPass(code);
+
+            // Generamos el código QR con el mismo código generado para EasyPass
+            string qrCodePath = QRGenerator.GenerateQRCode(code);
+
+            // Pasamos el path del QR generado a la vista para mostrarlo
+            ViewBag.QRCode = qrCodePath;
 
             return View("Index");
         }
+
+
+
+        // GET: Mostrar formulario de validación
+        [HttpGet]
+        public ActionResult ValidateCode()
+        {
+            return View();
+        }
+
+        // POST: Validar el código enviado por el formulario
+        [HttpPost]
+        public async Task<ActionResult> ValidateCode(string code)
+        {
+            bool isValid = await EasyPass.ValidateEasyPassCode(code);
+
+            if (isValid)
+            {
+                ViewBag.Message = "El código es válido.";
+                return View();
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "El código es inválido o ha expirado.";
+                return View();
+            }
+        }
+
 
 
 

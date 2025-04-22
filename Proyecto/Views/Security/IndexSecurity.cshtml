@@ -1,0 +1,54 @@
+﻿
+@{
+	ViewData["Title"] = "Create Security";
+}
+
+<div class="container mt-4">
+	<a class="btn btn-primary" asp-area="" asp-controller="Condo" asp-action="Index">Back</a>
+	<hr />
+	<nav>
+		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			<button class="nav-link active" id="nav-security-tab" data-bs-toggle="tab" data-bs-target="#nav-security" type="button" role="tab" aria-controls="nav-security" aria-selected="false">Securities</button>
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+		<div class="tab-pane fade show active" id="nav-security" role="tabpanel" aria-labelledby="nav-security-tab" tabindex="0">
+			<div class="accordion accordion-flush" id="accordionFlushExample">
+				@foreach (var security in ((IEnumerable<dynamic>)ViewBag.SecurityList).Where(s => s.Type == "security"))
+				{
+					<div class="accordion-item border rounded shadow-sm mb-3">
+						<h2 class="accordion-header" id="heading-@security.uuid">
+							<button class="accordion-button collapsed bg-light text-dark fw-semibold"
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapse-@security.uuid"
+									aria-expanded="false"
+									aria-controls="collapse-@security.uuid">
+								<i class="bi bi-person-circle me-2"></i> @security.Name
+							</button>
+						</h2>
+						<div id="collapse-@security.uuid"
+							 class="accordion-collapse collapse"
+							 aria-labelledby="heading-@security.uuid"
+							 data-bs-parent="#accordionFlushExample">
+
+							<div class="accordion-body">
+								<ul class="list-unstyled mb-0">
+									<li><strong>Email:</strong> @security.Email</li>
+									<li><strong>Type:</strong> @security.Type</li>
+									@if (@security.Assignment != null && @security.Assignment.Count > 0)
+									{
+										<li><strong>Assigned to the condominium:</strong> @security.Assignment[0].CondoAssignment</li>
+									}
+								</ul>
+
+								<a href="/Security/EditSecurity/@security.Email" class="btn btn-info">Edit</a>
+
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

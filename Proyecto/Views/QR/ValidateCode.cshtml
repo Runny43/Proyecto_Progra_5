@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Validar EasyPass";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <a class="btn btn-outline-secondary" asp-area="Main" asp-controller="Owner" asp-action="Main">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+    </div>
+
+    <div class="card shadow-lg rounded-4 p-4 mx-auto" style="max-width: 500px;">
+        <h2 class="text-center mb-4">Validar EasyPass</h2>
+
+        <form asp-action="ValidateCode" asp-controller="QR" method="post">
+            <div class="form-group mb-3">
+                <label for="code" class="form-label">Código</label>
+                <input type="text" class="form-control" id="code" name="code" placeholder="Ingrese el código" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Validar</button>
+        </form>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success mt-4" role="alert">
+                @ViewBag.Message
+            </div>
+        }
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger mt-4" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+    </div>
+</div>

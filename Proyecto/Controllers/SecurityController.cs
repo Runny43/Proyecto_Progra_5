@@ -52,8 +52,128 @@ namespace Proyecto.Controllers
         {
             ViewBag.Count = count;
 
-            return View("Index");
+            return View("IndexSecurity");
         }
+
+        public ActionResult IndexSecurity()
+        {
+            UserModel? user = GetSessionInfo();
+            if (user != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+                ViewBag.SecurityList = UserHelper.getSecurity().Result;
+
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult EditSecurity(string id)
+        {
+            UserModel? sessionUser = GetSessionInfo();
+            if (sessionUser != null)
+            {
+                ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+
+                var userInfo = UserHelper.getUserInfo(id).Result;
+                if (userInfo != null)
+                {
+                    ViewBag.Security = userInfo;
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        [HttpPost]
+        public ActionResult EditSecurityAction(string txtUuid, string txtEmail, string displayName, string txtCard, string selCondo)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                try
+                {
+                    UserHelper.editSecurity(txtUuid, txtEmail, displayName, txtCard, selCondo);
+                    return RedirectToAction("IndexSecurity", "Security");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+
+
+        //public ActionResult IndexSecurity()
+        //{
+        //    UserModel? user = GetSessionInfo();
+        //    if (user != null)
+        //    {
+        //        ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+        //        ViewBag.SecurityList = UserHelper.getSecurity().Result;
+
+        //        return View();
+        //    }
+
+        //    return RedirectToAction("Index", "Error");
+        //}
+
+        //public ActionResult EditSecurityAction(string txtUuid, string txtEmail, string displayName, string txtCard, string selCondo)
+        //{
+        //    UserModel? user = GetSessionInfo();
+
+        //    if (user != null)
+        //    {
+        //        try
+        //        {
+        //            UserHelper.editSecurity(txtUuid, txtEmail, displayName, txtCard, selCondo);
+
+        //            //return RedirectToAction ("IndexSecurity", "Profile");
+        //            return RedirectToAction("IndexSecurity", "Profile", new { id = txtUuid });
+        //        }
+        //        catch
+        //        {
+        //            return RedirectToAction("Index", "Error");
+        //        }
+        //    }
+
+        //    return RedirectToAction("Index", "Error");
+        //}
+
+        //public ActionResult EditSecurity(string id)
+        //{
+
+        //    UserModel? sessionUser = GetSessionInfo();
+
+        //    if (sessionUser != null)
+        //    {
+        //        ViewBag.CondoList = CondominiumHelper.getCondominiums().Result;
+
+        //        var userInfo = UserHelper.getUserInfo(id).Result;
+        //        if (userInfo != null)
+        //        {
+        //            ViewBag.Security = userInfo;
+        //            return View();
+        //        }
+        //        else
+        //        {
+        //            return RedirectToAction("Index", "Error"); // <- mover aquí
+        //        }
+        //    }
+
+        //    return RedirectToAction("Index", "Error");
+        //}
+
 
         // GET: SecurityController/Details/5
         public ActionResult Details(int id)
