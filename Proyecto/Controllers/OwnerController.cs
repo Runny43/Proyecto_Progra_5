@@ -81,6 +81,67 @@ namespace Proyecto.Controllers
             TempData["Error"] = "Error.";
             return RedirectToAction("Index");
         }
+
+        public ActionResult CreateDelivery(string txtTo, string txtName)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                try
+                {
+                    VisitHelper.postDelivery(txtTo, txtName, "delivery");
+
+                    return RedirectToAction("Main", "Owner");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+
+
+        }
+
+        public ActionResult EditDelivery(string name)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                
+                ViewBag.Delivery = VisitHelper.getDeliveryToEdit(name).Result;
+
+                return View();
+                
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult EditDeliverys(string txtUuid, string txtTo, string txtName)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                
+                try
+                {
+                    VisitHelper.editDelivery(txtUuid, txtTo, txtName);
+
+                    return RedirectToAction("Index", "Profile");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
         public ActionResult Main()
         {
             UserModel? user = GetSessionInfo();

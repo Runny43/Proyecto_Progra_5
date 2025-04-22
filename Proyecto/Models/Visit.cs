@@ -1,5 +1,6 @@
 ﻿using Google.Cloud.Firestore;
 using Proyecto.Firebase;
+using Proyecto.Mic;
 
 namespace Proyecto.Models
 {
@@ -97,8 +98,30 @@ namespace Proyecto.Models
                 
             }
 
+            return deliveryInfo;
+        }
+
+        public static async Task<List<VisitModel>> getDeliveryToEdit(string name)
+        {
+            List<VisitModel> deliveryInfo = new List<VisitModel>();
+
+            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Deliverys").WhereEqualTo("name", name);
+            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
 
+            foreach (var item in querySnapshot)
+            {
+                Dictionary<string, object> data = item.ToDictionary();
+                VisitModel visit = new VisitModel
+                {
+                    uuid = item.Id,
+                    To = data["To"].ToString(),
+                    Name = data["name"].ToString(),
+                    Type = data["type"].ToString(),
+                };
+                deliveryInfo.Add(visit);
+
+            }
 
             return deliveryInfo;
         }
@@ -155,6 +178,65 @@ namespace Proyecto.Models
             }
 
             return visitsList;
+        }
+
+        public static async void postDelivery(string to, string name, string type)
+        {
+            
+            DocumentReference docRef = await FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Deliverys").AddAsync(
+                    new Dictionary<string, object>
+                        {
+                            {"To", to },
+                            {"name", name},
+                            {"type", type}
+                        });
+        }
+
+        public static async void editDelivery(string uuid, string To, string name)
+        {
+            try
+            {
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Deliverys").Document(uuid);
+                Dictionary<string, object> dataToUpdate = new Dictionary<string, object>
+                {
+                    {"To", To },
+                    {"name", name },
+                    {"type", "delivery" }
+                };
+
+                WriteResult result = await docRef.UpdateAsync(dataToUpdate);
+
+                Thread.Sleep(3000);
+            }
+            catch
+            {
+
+            }
+
+        }
+
+        public static async void RemoveCondoFromUser(string uuid, string selCondo, int selCondoNumber)
+        {
+            try
+            {
+                Dictionary<string, object> objectProperties = new Dictionary<string, object>
+                {
+                    { "condo", selCondo },
+                    { "number", selCondoNumber }
+                };
+
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").Document(uuid);
+                Dictionary<string, object> dataToUpdate = new Dictionary<string, object>
+                {
+                    {"properties", FieldValue.ArrayRemove(objectProperties) }
+                };
+
+                WriteResult result = await docRef.UpdateAsync(dataToUpdate);
+            }
+            catch
+            {
+
+            }
         }
     }
 }

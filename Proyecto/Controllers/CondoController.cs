@@ -84,6 +84,23 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index", "Error");
         }
 
+        public ActionResult EditCondo()
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                List<Condominium> condoList = CondominiumHelper.getCondominiums().Result;
+
+                ViewBag.Condominium = condoList;
+
+                return View();
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
         // GET: CondoController/Details/5
         public ActionResult Details(int id)
         {
@@ -130,9 +147,25 @@ namespace Proyecto.Controllers
         }
 
         // GET: CondoController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(IFormCollection form)
         {
-            return View();
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+                try
+                {
+                    VisitHelper.RemoveCondoFromUser(form["txtUuid"].ToString(), form["selCondo"].ToString(), Convert.ToInt16(form["selCondoNumber"]));
+
+                    return RedirectToAction("Index", "Profile");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
         }
 
         // POST: CondoController/Delete/5

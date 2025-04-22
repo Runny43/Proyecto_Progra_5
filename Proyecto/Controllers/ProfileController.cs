@@ -101,7 +101,7 @@ namespace Proyecto.Controllers
             
         }
 
-
+        
         public ActionResult EditOwner(string txtUuid, string txtCard, string txtEmail, string txtName, string txtPlate, string txtBrand, string txtModel, string txtColor, string selCondo, int selCondoNumber)
         {
             UserModel? user = GetSessionInfo();

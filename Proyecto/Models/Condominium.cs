@@ -6,7 +6,7 @@ namespace Proyecto.Models
 {
     public class Condominium
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public String Name { get; set; }
 
@@ -32,6 +32,7 @@ namespace Proyecto.Models
 
                 condominiumList.Add(new Condominium
                 {
+                    Id= item.Id,
                     Name = data["Name"].ToString(),
                     Address = data["Address"].ToString(),
                     Count = Convert.ToInt32(data["Count"]),
@@ -41,7 +42,30 @@ namespace Proyecto.Models
 
             return condominiumList;
         }
+        public static async Task<List<Condominium>> getCondominium(string name)
+        {
+            List<Condominium> condominiumList = new List<Condominium>();
 
+            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominium").WhereEqualTo("name", name);
+            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+
+
+            foreach(var item in querySnapshot)
+            {
+                Dictionary<string, object> data = item.ToDictionary();
+
+                condominiumList.Add(new Condominium
+                {
+                    Id= item.Id,
+                    Name = data["Name"].ToString(),
+                    Address = data["Address"].ToString(),
+                    Count = Convert.ToInt32(data["Count"]),
+                    Photo = data["Photo"].ToString(),
+                });
+            }
+
+            return condominiumList;
+        }
         public async Task<bool> saveCondominium(Condominium condominium)
         {
             try
