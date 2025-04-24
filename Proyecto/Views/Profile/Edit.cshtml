@@ -46,7 +46,9 @@
 							</div>
 							<hr />
 							<div class="mb-3">
-								<select id="selCondo" name="selCondo" class="form-select" aria-label="Select the condominium">									
+								<select id="selCondo" name="selCondo" class="form-select" aria-label="Select the condominium">
+									<option selected>Select the condominium</option>
+
 									@foreach (var condo in @ViewBag.CondoList)
 									{
 										<option value="@condo.Name" data-count="@condo.Count">@condo.Name</option>
