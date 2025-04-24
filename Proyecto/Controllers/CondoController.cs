@@ -84,7 +84,7 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index", "Error");
         }
 
-        public ActionResult EditCondo()
+        public ActionResult CondoDetails()
         {
             UserModel? user = GetSessionInfo();
 
@@ -100,7 +100,65 @@ namespace Proyecto.Controllers
 
             return RedirectToAction("Index", "Error");
         }
+        public ActionResult EditCondominium(string name)
+        {
+            UserModel? user = GetSessionInfo();
 
+            if (user != null)
+            {
+
+                ViewBag.Condo = CondominiumHelper.getCondominium(name).Result;
+
+                return View();
+
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult DeleteCondo(string uuid)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    CondominiumHelper.DeleteCondo(uuid);
+
+                    return RedirectToAction("Index", "Condo");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult EditCondominiumAction(string txtUuid, string txtName, string txtAddress, int txtCount, string txtPhoto)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    CondominiumHelper.editCondo(txtUuid, txtName, txtAddress, txtCount, txtPhoto);
+
+                    return RedirectToAction("Index", "Condo");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
         // GET: CondoController/Details/5
         public ActionResult Details(int id)
         {
@@ -155,8 +213,7 @@ namespace Proyecto.Controllers
             {
                 try
                 {
-                    VisitHelper.RemoveCondoFromUser(form["txtUuid"].ToString(), form["selCondo"].ToString(), Convert.ToInt16(form["selCondoNumber"]));
-
+                    
                     return RedirectToAction("Index", "Profile");
                 }
                 catch

@@ -13,7 +13,6 @@ namespace Proyecto.Models
         public string uuid { get; set; }
         public string id_Card { get; set; }
         public string Email { get; set; }
-
         public string Name { get; set; }
 
         public string Type { get; set; }
@@ -393,25 +392,13 @@ namespace Proyecto.Models
             }
         }
 
-        public static async Task<bool> DeleteOwner(string uuid, string email)
+        public static async Task<bool> DeleteOwner(string uuid)
         {
             try
             {
-                // 1. Eliminar de Firestore
-                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId)
-                                                   .Collection("User")
-                                                   .Document(uuid);
+
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").Document(uuid);
                 await docRef.DeleteAsync();
-
-                //// 2. Eliminar de Authentication (Versión 4.1.0)
-                //var auth = FirebaseAuth.DefaultInstance;
-                //var userRecord = await auth.GetUserByEmailAsync(email);
-                //await auth.DeleteUserAsync(userRecord.Uid);
-
-                //// Eliminar de Authentication
-                //var authClient = FirebaseAuthHelper.setFirebaseAuthClient();
-                //var userRecord = await authClient.GetUserByEmailAsync(email);
-                //await authClient.DeleteUserAsync(userRecord.Uid);
 
                 return true;
             }
@@ -421,32 +408,5 @@ namespace Proyecto.Models
                 return false;
             }
         }
-
-        public static async Task<bool> DeleteSecurity(string uuid, string email)
-        {
-            try
-            {
-                // Eliminar de Firestore
-                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("User").Document(uuid);
-                await docRef.DeleteAsync();
-
-                //// Eliminar de Authentication
-                //var authClient = FirebaseAuthHelper.setFirebaseAuthClient();
-                //var userRecord = await authClient.GetUserByEmailAsync(email);
-                //await authClient.DeleteUserAsync(userRecord.Uid);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                // Puedes loggear el error aquí si lo necesitas
-                Console.WriteLine($"Error al eliminar security: {ex.Message}");
-                return false;
-            }
-        }
-
-
-
-
     }
 }

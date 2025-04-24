@@ -1,0 +1,66 @@
+﻿@{
+	ViewData["Title"] = "Edit Visit";
+}
+
+<div class="container mt-4">
+	<a class="btn btn-primary" asp-area="" asp-controller="Owner" asp-action="Main">Back</a>
+	<hr />
+
+	<div class="text-center">
+		<div class="container mt-5">
+			<div class="row justify-content-center">
+				@foreach (var visit in ViewBag.Visit)
+				{
+					<div class="col-md-4 mb-4">
+						<div class="card shadow-lg p-4">
+							<form method="post" asp-controller="Owner" asp-action="EditVisits">
+								<div class="mb-3">
+									<label for="txtUuid" class="form-label">UUID</label>
+									<input type="text" id="txtUuid" name="txtUuid" class="form-control" value="@visit.uuid" required readonly />
+								</div>
+								<div class="mb-3">
+									<label for="txtCard" class="form-label">Identificación de pase</label>
+									<input type="text" id="txtCard" name="txtCard" class="form-control" value="@visit.Id_Card" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtTo" class="form-label">Para</label>
+									<input type="text" id="txtTo" name="txtTo" class="form-control" value="@visit.To" required readonly />
+								</div>
+								<div class="mb-3">
+									<label for="txtName" class="form-label">Nombre del visitante</label>
+									<input type="text" id="txtName" name="txtName" class="form-control" value="@visit.Name" required />
+								</div>
+								<div class="mb-3">
+									<select id="txtType" name="txtType" class="form-select" aria-label="Seleccionar tipo de visita">
+										<option selected>Selecciona el tipo de visita</option>
+
+										<option value="normal">Normal</option>
+										<option value="favorite">Favorita</option>
+									</select>
+								</div>
+								<div class="mb-3">
+									<label for="txtModel" class="form-label">Modelo del auto</label>
+									<input type="text" id="txtModel" name="txtModel" class="form-control" value="@visit.Vehicles[0].Model" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtPlate" class="form-label">Placa del auto</label>
+									<input type="text" id="txtPlate" name="txtPlate" class="form-control" value="@visit.Vehicles[0].Plate" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtBrand" class="form-label">Marca del auto</label>
+									<input type="text" id="txtBrand" name="txtBrand" class="form-control" value="@visit.Vehicles[0].Brand" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtColor" class="form-label">Color del auto</label>
+									<input type="text" id="txtColor" name="txtColor" class="form-control" value="@visit.Vehicles[0].Color" required />
+								</div>
+								<hr />
+								<button type="submit" class="btn btn-primary w-100">Update</button>
+							</form>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,38 +1,123 @@
 ﻿@{
-    ViewData["Title"] = "Visits Page";
+	ViewData["Title"] = "Create Profile";
 }
 
 <div class="container mt-4">
-    <h2 class="text-center">Transaction List - Welcome @ViewBag.User.Name</h2>
-    <a class="btn btn-primary" asp-area="Main" asp-controller="Owner" asp-action="Main">Back</a>
-    <hr />
+	<a class="btn btn-primary" asp-area="" asp-controller="Root" asp-action="Main">Back</a>
+	<hr />
+	<nav>
+		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			<button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Owners</button>
+			<button class="nav-link" id="nav-owner-tab" data-bs-toggle="tab" data-bs-target="#nav-owner" type="button" role="tab" aria-controls="nav-owner" aria-selected="true">Create owner</button>
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+		<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+			<div class="accordion accordion-flush" id="accordionFlushExample">
+				@* @foreach (var owner in @ViewBag.OwnerList) *@
+				@foreach (var visit in ((IEnumerable<dynamic>)ViewBag.Visits))
+				{
+					<div class="accordion-item border rounded shadow-sm mb-3">
+						<h2 class="accordion-header" id="heading-@visit.uuid">
+							<button class="accordion-button collapsed bg-light text-dark fw-semibold"
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapse-@visit.uuid"
+									aria-expanded="false"
+									aria-controls="collapse-@visit.uuid">
+								<i class="bi bi-person-circle me-2"></i> @visit.To
+							</button>
+						</h2>
+						<div id="collapse-@visit.uuid"
+							 class="accordion-collapse collapse"
+							 aria-labelledby="heading-@visit.uuid"
+							 data-bs-parent="#accordionFlushExample">
 
+							<div class="accordion-body">
+								<ul class="list-unstyled mb-0">
+									<li><strong>Visita dirigida a:</strong> @visit.To</li>
+									<li><strong>Visitante:</strong> @visit.Name</li>
+									<li><strong>Tipo de visita:</strong> @visit.Type</li>
+									@if (@visit.Vehicles != null)
+									{
+										<li><strong>Placa:</strong> @visit.Vehicles[0].Plate</li>
+										<li><strong>Modelo:</strong> @visit.Vehicles[0].Model</li>
+										<li><strong>Marca:</strong> @visit.Vehicles[0].Brand</li>
+										<li><strong>Color:</strong> @visit.Vehicles[0].Color</li>
+									}
+								</ul>
+								
+								<form asp-action="EditVisit" asp-controller="Owner" method="post" style="display:inline;" class="ms-2">
+									<input type="hidden" name="name" value="@visit.Name" />
+									<button type="submit" class="btn btn-danger">
+										Editar Visita
+									</button>
+								</form>
+								<form asp-action="DeleteVisit" asp-controller="Owner" method="post" style="display:inline;" class="ms-2">
+									<input type="hidden" name="uuid" value="@visit.uuid" />
+									<button type="submit" class="btn btn-danger"
+											onclick="return confirm('¿Estás seguro de querer eliminar este propietario?')">
+										Eliminar Vista
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+		<div class="tab-pane fade" id="nav-owner" role="tabpanel" aria-labelledby="nav-owner-tab" tabindex="0">
+			<div class="row justify-content-center">
+				<div class="col-md-4">
+					<div class="card shadow-lg p-4">
+						<form method="post" asp-controller="Owner" asp-action="CreateVisit">
+							<div class="mb-3">
+								<label for="txtCard" class="form-label">Identificación de entrada:</label>
+								<input type="text" id="txtCard" name="txtCard" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtTo" class="form-label">Visita para:</label>
+								<input type="text" id="txtTo" name="txtTo" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtName" class="form-label">Nombre del visitante:</label>
+								<input type="text" id="txtName" name="txtName" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<select id="txtType" name="txtType" class="form-select" aria-label="Seleccionar tipo de visita">
+									<option selected>Selecciona el tipo de visita</option>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>To</th>
-                <th>Type</th>
-                <th>Id_Card</th>
-                <th>Plate</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var visit in ViewBag.Visits)
-            {
-                <tr>
-                    <td>@visit.Name</td>
-                    <td>@visit.To</td>
-                    <td>@visit.Type</td>
-                    <td>@visit.Id_Card</td>
-                    <td>@visit.Vehicles[0].Plate</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+									<option value="normal">Normal</option>
+									<option value="favorite">Favorita</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="txtPlate" class="form-label">Placa del automovil</label>
+								<input type="text" id="txtPlate" name="txtPlate" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtBrand" class="form-label">Marca</label>
+								<input type="text" id="txtBrand" name="txtBrand" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtModel" class="form-label">Modelo</label>
+								<input type="text" id="txtModel" name="txtModel" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label for="txtColor" class="form-label">Color del automovil</label>
+								<input type="text" id="txtColor" name="txtColor" class="form-control" required />
+							</div>
+							<hr />
+							
+							<hr />
+							<button type="submit" class="btn btn-primary w-100">Registrar Vista</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-
 <style>
     body {
         background-image: url('https://s0.smartresize.com/wallpaper/751/96/HD-wallpaper-px-digital-art-japan-minimalism-simple-background-sun-trees-video-games-star-wars-fotografia-neon-ilustracion-de-arbol-fondos-de-pantalla-simples-minimalist-japanese-art.jpg');

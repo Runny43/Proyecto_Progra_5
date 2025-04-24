@@ -44,9 +44,26 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult SeeVisits()
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                ViewBag.Visits = VisitHelper.getAllVisits().Result;
+                ViewBag.Deliverys = VisitHelper.getAllDeliverys().Result;
+                ViewBag.Visits2= VisitHelper.getAllVisits().Result;
+
+                return View();
+
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
 
         // GET: SecurityController
-        
+
 
         public ActionResult SetCount(int count)
         {
@@ -112,6 +129,7 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index", "Error");
         }
 
+        
 
 
         //public ActionResult IndexSecurity()

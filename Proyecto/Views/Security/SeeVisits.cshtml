@@ -1,0 +1,191 @@
+﻿@{
+	ViewData["Title"] = "Create Profile";
+}
+
+<div class="container mt-4">
+	<a class="btn btn-primary" asp-area="" asp-controller="Root" asp-action="Main">Back</a>
+	<hr />
+	<nav>
+		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			<button class="nav-link active" id="nav-deliverys-tab" data-bs-toggle="tab" data-bs-target="#nav-deliverys" type="button" role="tab" aria-controls="nav-deliverys" aria-selected="false">Ver deliverys</button>
+			<button class="nav-link" id="nav-normal-tab" data-bs-toggle="tab" data-bs-target="#nav-normal" type="button" role="tab" aria-controls="nav-normal" aria-selected="true">Ver visitas normales</button>
+			<button class="nav-link" id="nav-favorites-tab" data-bs-toggle="tab" data-bs-target="#nav-favorites" type="button" role="tab" aria-controls="nav-favorites" aria-selected="true">Ver visitas favoritas</button>
+		</div>
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+	<div class="tab-pane fade show active" id="nav-deliverys" role="tabpanel" aria-labelledby="nav-deliverys-tab" tabindex="0">
+		<div class="accordion accordion-flush" id="accordionDelivery">
+			@foreach (var delivery in ((IEnumerable<dynamic>)ViewBag.Deliverys))
+			{
+				<div class="accordion-item border rounded shadow-sm mb-3">
+					<h2 class="accordion-header" id="heading-@delivery.uuid">
+						<button class="accordion-button collapsed bg-light text-dark fw-semibold"
+								type="button"
+								data-bs-toggle="collapse"
+								data-bs-target="#collapse-@delivery.uuid"
+								aria-expanded="false"
+								aria-controls="collapse-@delivery.uuid">
+							<i class="bi bi-person-circle me-2"></i> @delivery.To
+						</button>
+					</h2>
+					<div id="collapse-@delivery.uuid"
+						 class="accordion-collapse collapse"
+						 aria-labelledby="heading-@delivery.uuid"
+						 data-bs-parent="#accordionDelivery">
+
+						<div class="accordion-body">
+							<ul class="list-unstyled mb-0">
+								<li><strong>Identificación de entrada:</strong> @delivery.Id_Card</li>
+								<li><strong>Visita dirigida a:</strong> @delivery.To</li>
+								<li><strong>Visitante:</strong> @delivery.Name</li>
+								<li><strong>Tipo de visita:</strong> @delivery.Type</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="tab-pane fade" id="nav-normal" role="tabpanel" aria-labelledby="nav-normal-tab" tabindex="0">
+		<div class="accordion accordion-flush" id="accordionNormal">
+			@foreach (var visit in ((IEnumerable<dynamic>)ViewBag.Visits).Where(s => s.Type == "normal"))
+			{
+				<div class="accordion-item border rounded shadow-sm mb-3">
+					<h2 class="accordion-header" id="heading-@visit.uuid">
+						<button class="accordion-button collapsed bg-light text-dark fw-semibold"
+								type="button"
+								data-bs-toggle="collapse"
+								data-bs-target="#collapse-@visit.uuid"
+								aria-expanded="false"
+								aria-controls="collapse-@visit.uuid">
+							<i class="bi bi-person-circle me-2"></i> @visit.To
+						</button>
+					</h2>
+					<div id="collapse-@visit.uuid"
+						 class="accordion-collapse collapse"
+						 aria-labelledby="heading-@visit.uuid"
+						 data-bs-parent="#accordionNormal">
+
+						<div class="accordion-body">
+							<ul class="list-unstyled mb-0">
+								<li><strong>Identificación de entrada:</strong> @visit.Id_Card</li>
+								<li><strong>Visita dirigida a:</strong> @visit.To</li>
+								<li><strong>Visitante:</strong> @visit.Name</li>
+								<li><strong>Tipo de visita:</strong> @visit.Type</li>
+								@if (@visit.Vehicles != null)
+								{
+									<li><strong>Placa:</strong> @visit.Vehicles[0].Plate</li>
+									<li><strong>Modelo:</strong> @visit.Vehicles[0].Model</li>
+									<li><strong>Marca:</strong> @visit.Vehicles[0].Brand</li>
+									<li><strong>Color:</strong> @visit.Vehicles[0].Color</li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+
+	<div class="tab-pane fade" id="nav-favorites" role="tabpanel" aria-labelledby="nav-favorites-tab" tabindex="0">
+		<div class="accordion accordion-flush" id="accordionFavorites">
+			@foreach (var visit2 in ((IEnumerable<dynamic>)ViewBag.Visits2).Where(s => s.Type == "favorite"))
+			{
+				<div class="accordion-item border rounded shadow-sm mb-3">
+					<h2 class="accordion-header" id="heading-@visit2.uuid">
+						<button class="accordion-button collapsed bg-light text-dark fw-semibold"
+								type="button"
+								data-bs-toggle="collapse"
+								data-bs-target="#collapse-@visit2.uuid"
+								aria-expanded="false"
+								aria-controls="collapse-@visit2.uuid">
+							<i class="bi bi-person-circle me-2"></i> @visit2.To
+						</button>
+					</h2>
+					<div id="collapse-@visit2.uuid"
+						 class="accordion-collapse collapse"
+						 aria-labelledby="heading-@visit2.uuid"
+						 data-bs-parent="#accordionFavorites">
+
+						<div class="accordion-body">
+							<ul class="list-unstyled mb-0">
+								<li><strong>Identificación de entrada:</strong> @visit2.Id_Card</li>
+								<li><strong>Visita dirigida a:</strong> @visit2.To</li>
+								<li><strong>Visitante:</strong> @visit2.Name</li>
+								<li><strong>Tipo de visita:</strong> @visit2.Type</li>
+								@if (@visit2.Vehicles != null)
+								{
+									<li><strong>Placa:</strong> @visit2.Vehicles[0].Plate</li>
+									<li><strong>Modelo:</strong> @visit2.Vehicles[0].Model</li>
+									<li><strong>Marca:</strong> @visit2.Vehicles[0].Brand</li>
+									<li><strong>Color:</strong> @visit2.Vehicles[0].Color</li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+
+</div>
+<style>
+	body {
+		background-image: url('https://s0.smartresize.com/wallpaper/751/96/HD-wallpaper-px-digital-art-japan-minimalism-simple-background-sun-trees-video-games-star-wars-fotografia-neon-ilustracion-de-arbol-fondos-de-pantalla-simples-minimalist-japanese-art.jpg');
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		min-height: 100vh;
+		margin: 0;
+	}
+
+	.container {
+		background-color: rgba(255, 255, 255, 0.9);
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.hover-shadow {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+		.hover-shadow:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+		}
+
+	.object-fit-cover {
+		object-fit: cover;
+	}
+
+	.card {
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	table {
+		margin-top: 30px;
+		width: 80%;
+		margin-left: auto;
+		margin-right: auto;
+		border-collapse: collapse;
+		background-color: white;
+	}
+
+	table, th, td {
+		border: 1px solid #ddd;
+	}
+
+	th, td {
+		padding: 10px;
+		text-align: center;
+	}
+
+	th {
+		background-color: #007bff;
+		color: white;
+	}
+</style>

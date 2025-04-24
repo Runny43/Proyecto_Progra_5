@@ -185,6 +185,48 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index", "Error");
         }
 
+        public ActionResult DeleteSecurity(string uuid)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    UserHelper.DeleteOwner(uuid);
+
+                    return RedirectToAction("Main", "Root");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+        public ActionResult DeleteOwners(string uuid)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    UserHelper.DeleteOwner(uuid);
+
+                    return RedirectToAction("Main", "Root");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
         public ActionResult EditSecurity(string id)
         {
 

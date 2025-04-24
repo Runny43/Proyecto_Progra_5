@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Proyecto.Mic;
 using Proyecto.Models;
+using System.Xml.Linq;
 
 namespace Proyecto.Controllers
 {
@@ -63,6 +64,8 @@ namespace Proyecto.Controllers
             TempData["Error"] = "Error.";
             return RedirectToAction("Index");
         }
+
+        
         public ActionResult Deliverys()
         {
             UserModel? user = GetSessionInfo();
@@ -82,29 +85,69 @@ namespace Proyecto.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult CreateDelivery(string txtTo, string txtName)
+        public ActionResult CreateDelivery(string txtCard, string txtTo, string txtName)
         {
             UserModel? user = GetSessionInfo();
 
             if (user != null)
             {
-                try
+                if (txtTo == user.Name)
                 {
-                    VisitHelper.postDelivery(txtTo, txtName, "delivery");
+                    try
+                    {
+                        VisitHelper.postDelivery(txtTo, txtCard, txtName, "delivery");
 
-                    return RedirectToAction("Main", "Owner");
+                        return RedirectToAction("Main", "Owner");
+                    }
+
+                    catch
+                    {
+                        return RedirectToAction("Index", "Error");
+                    }
                 }
-                catch
-                {
-                    return RedirectToAction("Index", "Error");
-                }
+                
             }
 
             return RedirectToAction("Index", "Error");
 
 
         }
+        public ActionResult CreateVisit(string txtCard, string txtTo, string txtName, string txtType, string txtPlate, string txtBrand, string txtModel, string txtColor)
+        {
+            UserModel? user = GetSessionInfo();
 
+            if (user != null)
+            {
+                if (txtTo == user.Name) 
+                {
+
+                    List<VisitModel> visitsList = VisitHelper.getAllVisits().Result;
+
+                    foreach (var visit in visitsList) 
+                    {
+                        if (txtName != visit.Name)
+                        {
+                            try
+                            {
+                                VisitHelper.postVisit(txtTo, txtCard, txtName, txtType, txtPlate, txtBrand, txtModel, txtColor);
+
+                                return RedirectToAction("Main", "Owner");
+                            }
+                            catch
+                            {
+                                return RedirectToAction("Index", "Error");
+                            }
+                        }
+                        
+                    }
+                }
+                
+            }
+
+            return RedirectToAction("Index", "Error");
+
+
+        }
         public ActionResult EditDelivery(string name)
         {
             UserModel? user = GetSessionInfo();
@@ -120,8 +163,43 @@ namespace Proyecto.Controllers
 
             return RedirectToAction("Index", "Error");
         }
+        public ActionResult EditVisit(string name)
+        {
+            UserModel? user = GetSessionInfo();
 
-        public ActionResult EditDeliverys(string txtUuid, string txtTo, string txtName)
+            if (user != null)
+            {
+
+                ViewBag.Visit = VisitHelper.getVisitToEdit(name).Result;
+
+                return View();
+
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+        public ActionResult EditVisits(string txtUuid, string txtCard, string txtTo, string txtName, string txtType, string txtModel, string txtPlate, string txtBrand, string txtColor)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    VisitHelper.editVisit(txtUuid, txtCard, txtTo, txtName, txtType, txtModel, txtBrand, txtPlate, txtColor);
+
+                    return RedirectToAction("Visits", "Owner");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+        public ActionResult EditDeliverys(string txtUuid, string txtCard, string txtTo, string txtName)
         {
             UserModel? user = GetSessionInfo();
 
@@ -132,7 +210,7 @@ namespace Proyecto.Controllers
                 {
                     VisitHelper.editDelivery(txtUuid, txtTo, txtName);
 
-                    return RedirectToAction("Index", "Profile");
+                    return RedirectToAction("Main", "Owner");
                 }
                 catch
                 {
@@ -154,6 +232,52 @@ namespace Proyecto.Controllers
             TempData["Error"] = "Error.";
             return RedirectToAction("Index");
         }
+
+        public ActionResult DeleteDelivery(string uuid)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    VisitHelper.DeleteDelivery(uuid);
+
+                    return RedirectToAction("Main", "Owner");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        public ActionResult DeleteVisit(string uuid)
+        {
+            UserModel? user = GetSessionInfo();
+
+            if (user != null)
+            {
+
+                try
+                {
+                    VisitHelper.DeleteVisit(uuid);
+
+                    return RedirectToAction("Main", "Owner");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+
+            return RedirectToAction("Index", "Error");
+        }
+
+        
 
 
         // GET: OwnerController/Details/5
@@ -205,10 +329,7 @@ namespace Proyecto.Controllers
         }
 
         // GET: OwnerController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        
 
         // POST: OwnerController/Delete/5
         [HttpPost]

@@ -1,0 +1,47 @@
+﻿@{
+	ViewData["Title"] = "EditDelivery";
+}
+
+<div class="container mt-4">
+	<a class="btn btn-primary" asp-area="" asp-controller="Condo" asp-action="Index">Back</a>
+	<hr />
+
+	<div class="text-center">
+		<div class="container mt-5">
+			<div class="row justify-content-center">
+				@foreach (var condo in ViewBag.Condo)
+				{
+					<div class="col-md-4 mb-4">
+						<div class="card shadow-lg p-4">
+							<form method="post" asp-controller="Condo" asp-action="EditCondominiumAction">
+								<div class="mb-3">
+									<label for="txtUuid" class="form-label">UUID</label>
+									<input type="text" id="txtUuid" name="txtUuid" class="form-control" value="@condo.Id" required readonly />
+								</div>
+								<div class="mb-3">
+									<label for="txtName" class="form-label">Nombre:</label>
+									<input type="text" id="txtName" name="txtName" class="form-control" value="@condo.Name" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtAddress" class="form-label">Ubicación</label>
+									<input type="text" id="txtAddress" name="txtAddress" class="form-control" value="@condo.Address" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtCount" class="form-label">Cantidad:</label>
+									<input type="number" id="txtCount" name="txtCount" class="form-control" value="@condo.Count" required />
+								</div>
+								<div class="mb-3">
+									<label for="txtPhoto" class="form-label">Foto:</label>
+									<input type="text" id="txtPhoto" name="txtPhoto" class="form-control" value="@condo.Photo" required />
+								</div>
+								<hr />
+								<button type="submit" class="btn btn-primary w-100">Update</button>
+							</form>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+

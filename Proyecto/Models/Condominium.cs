@@ -46,7 +46,7 @@ namespace Proyecto.Models
         {
             List<Condominium> condominiumList = new List<Condominium>();
 
-            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominium").WhereEqualTo("name", name);
+            Query query = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominium").WhereEqualTo("Name", name);
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
 
@@ -84,20 +84,52 @@ namespace Proyecto.Models
 
                 await coll.AddAsync(newCondo);
 
-                //DocumentReference docRef = await FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominiums").AddAsync(
-                //    new Dictionary<string, object>
-                //    {
-                //        { "Name", condominium.Name },
-                //        { "Address", condominium.Address },
-                //        { "Count", condominium.Count },
-                //        { "Photo", condominium.Photo } 
-                //    });
+                
                 return true;
             }
             catch
             {
                 return false;
             }
+        }
+        public static async Task<bool> DeleteCondo(string uuid)
+        {
+            try
+            {
+
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominium").Document(uuid);
+                await docRef.DeleteAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar owner: {ex.Message}");
+                return false;
+            }
+        }
+        public static async void editCondo(string id, string name, string address, int count, string photo)
+        {
+            try
+            {
+                DocumentReference docRef = FirestoreDb.Create(FirebaseAuthHelper.firebaseAppId).Collection("Condominium").Document(id);
+                Dictionary<string, object> dataToUpdate = new Dictionary<string, object>
+                {
+                    { "Name", name },
+                        { "Address", address },
+                        { "Count", count },
+                        { "Photo", photo }
+                };
+
+                WriteResult result = await docRef.UpdateAsync(dataToUpdate);
+
+                Thread.Sleep(3000);
+            }
+            catch
+            {
+
+            }
+
         }
     }
 }
