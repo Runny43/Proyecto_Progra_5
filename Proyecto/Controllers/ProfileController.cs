@@ -250,56 +250,7 @@ namespace Proyecto.Controllers
 
             return RedirectToAction("Index", "Error");
         }
-
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> DeleteOwner(string uuid)
-        //{
-        //    // Obtener el email del owner
-        //    var owner = await UserModel.getUserInfoByUuid(uuid);
-
-        //    if (owner == null || owner.Type != "owner") // Asegurarnos que solo se eliminen owners
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    bool result = await UserModel.DeleteOwner(uuid, owner.Email);
-
-        //    if (result)
-        //    {
-        //        return RedirectToAction("Index"); // Redirigir a la lista de owners
-        //    }
-        //    else
-        //    {
-        //        TempData["ErrorMessage"] = "No se pudo eliminar el owner";
-        //        return RedirectToAction("Index");
-        //    }
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> DeleteSecurity(string uuid)
-        //{
-        //    // Obtener el email del security
-        //    var security = await UserModel.getUserInfoByUuid(uuid);
-
-        //    if (security == null || security.Type != "security") // Asegurarnos que solo se eliminen security
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    bool result = await UserModel.DeleteSecurity(uuid, security.Email);
-
-        //    if (result)
-        //    {
-        //        return RedirectToAction("SecurityList"); // Redirigir a la lista de security
-        //    }
-        //    else
-        //    {
-        //        TempData["ErrorMessage"] = "No se pudo eliminar el security";
-        //        return RedirectToAction("SecurityList");
-        //    }
-        //}
+        
 
 
         // GET: ProfileController/Details/5
@@ -341,13 +292,6 @@ namespace Proyecto.Controllers
                 return View();
             }
         }
-
-        // GET: ProfileController/Delete/5
-        //public async Task<IActionResult> DeleteUser(string uuid)
-        //{
-        //    await DeleteUserAsync(uuid); // El uuid recibido desde el form
-        //    return RedirectToAction("Profile"); // Redirige a donde quieras después de la eliminación
-        //}
 
     }
 }
